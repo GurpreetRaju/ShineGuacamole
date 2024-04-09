@@ -31,10 +31,9 @@ namespace ShineGuacamole.Services
             var connectionConfiguration = new Dictionary<string, string>
             {
                 { "type", "RDP" },
-                { "hostname", "172.23.250.3" },
-                { "username", "testvm" },
-                { "password", "testvm" },
-                { "remote-app", "||wmplayer2" }
+                { "hostname", "0.0.0.0" },
+                { "username", "user_name" },
+                { "password", "user_password" }
             };
 
             return Task.FromResult(connectionConfiguration);

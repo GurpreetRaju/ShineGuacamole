@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Client\ShineGuacamole.Client.csproj" />
     <ProjectReference Include="..\Shared\ShineGuacamole.Shared.csproj" />
+    <ProjectReference Include="..\ShineGuacamole.Library\ShineGuacamole.Library.csproj" />
     <ProjectReference Include="..\ShineGuacamole.Services\ShineGuacamole.Library.csproj" />
   </ItemGroup>
 

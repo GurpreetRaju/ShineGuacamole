@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Client", "Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Shared", "Shared\ShineGuacamole.Shared.csproj", "{E47E3A83-3FB6-4DE5-A173-0F9C74879F98}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Library", "ShineGuacamole.Services\ShineGuacamole.Library.csproj", "{F85B622E-35BB-446E-B966-61710900BFB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Library", "ShineGuacamole.Library\ShineGuacamole.Library.csproj", "{F85B622E-35BB-446E-B966-61710900BFB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
