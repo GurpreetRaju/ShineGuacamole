@@ -1,0 +1,18 @@
+﻿@attribute [Route(AppRoutes.RemoteConnection)];
+
+@if (string.IsNullOrEmpty(_connectionId))
+{
+    <MudAlert>Please go back to the <MudLink Href="@AppRoutes.Connections">@nameof(AppRoutes.Connections)</MudLink> page and select a connection.</MudAlert>
+}
+else
+{
+    <MudStack AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="3">
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+            <MudButton ButtonType="ButtonType.Button" OnClick="@Connect">Connect</MudButton>
+            <MudButton ButtonType="ButtonType.Button" OnClick="@Disconnect" Color="Color.Error">Disconnect</MudButton>
+        </MudButtonGroup>
+        <MudPaper>
+            <div @ref="_display" class="display-wrapper relative"></div>
+        </MudPaper>
+    </MudStack>
+}

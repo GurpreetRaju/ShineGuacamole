@@ -1,0 +1,28 @@
+﻿@attribute [Route(AppRoutes.Connections)]
+
+<h3>Connections</h3>
+
+@if (_connections == null || _connections.Length == 0)
+{
+    <MudStack Class="align-content-center">
+        <MudIcon Icon="@Icon.Empty"></MudIcon>
+        <MudText Class="">There is nothing show.</MudText>
+    </MudStack>
+}
+else
+{
+    <MudGrid>
+        @foreach (var connection in _connections)
+        {
+            <MudItem xs="3">
+                <MudPaper @onclick="(() => Connect(connection))" MinHeight="100px"
+                    Class="d-flex flex-column align-center justify-center mud-width-full">
+                    <MudAvatar Variant="Variant.Filled">
+                        <MudIcon Icon="@Icons.Material.Filled.Computer"></MudIcon>
+                    </MudAvatar>
+                    <MudText>@connection.Name</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+}
