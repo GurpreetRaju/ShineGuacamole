@@ -4,21 +4,12 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-
 <MudLayout>
-    <MudAppBar>
-        Shine Guacamole
-        <MudSpacer></MudSpacer>
-        <MudLink Href="@AppRoutes.Connections" Color="@Color.Inherit">
-            <MudStack Row="true">
-                <MudIcon Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit"></MudIcon>
-                <MudText>Connections</MudText>
-            </MudStack>
-        </MudLink>
-    </MudAppBar>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
-            @Body
-        </MudContainer>
-    </MudMainContent>
+    <AppBarContentProvider ApplicationName="@ApplicationName">
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </AppBarContentProvider>
 </MudLayout>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using ShineGuacamole.Client.Services;
+using MudBlazor;
+using ShineGuacamole.Client.Components;
+using ShineGuacamole.Client.General;
 
 namespace ShineGuacamole.Client.Pages
 {
@@ -12,8 +14,8 @@ namespace ShineGuacamole.Client.Pages
         private IJSObjectReference _module;
         private Guid _id = new Guid();
         private ElementReference _display;
-        private string _connectionId;
         private bool _connected;
+        private bool _initialized;
 
         /// <summary>
         /// JS Runtime.
@@ -22,10 +24,34 @@ namespace ShineGuacamole.Client.Pages
         protected IJSRuntime JS { get; set; }
 
         /// <summary>
-        /// Remote connection state.
+        /// The snackbar.
         /// </summary>
         [Inject]
-        protected RemoteConnectionState State { get; set; }
+        protected ISnackbar Snackbar { get; set; }
+
+        /// <summary>
+        /// The connection identifier.
+        /// </summary>
+        [SupplyParameterFromQuery]
+        protected string ConnectionId { get; set; }
+
+        /// <summary>
+        /// App bar content provider.
+        /// </summary>
+        [CascadingParameter]
+        public AppBarContentProvider AppBarContentProvider { get; set; }
+
+        /// <inheritdoc/>
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            AppBarContentProvider.SetPageTitle("Remote Connection");
+            AppBarContentProvider.SetActions([
+                 new ActionConfig { Icon = Icons.Material.Filled.Link, OnClick = () => _ = Connect(), Text = "Connect" },
+                 new ActionConfig { Icon = Icons.Material.Filled.LinkOff, OnClick = () => _ = Disconnect(), Text = "Disconnect" }
+            ]);
+        }
 
         /// <summary>
         /// Called when the component is initialized.
@@ -33,22 +59,17 @@ namespace ShineGuacamole.Client.Pages
         /// <returns></returns>
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
-
-            _connectionId = State.PendingConnectionId;
-            State.PendingConnectionId = null;
-        }
-
-        /// <summary>
-        /// Called after the component is rendered.
-        /// </summary>
-        /// <param name="firstRender">Whether this is first render.</param>
-        /// <returns></returns>
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
+            try
             {
+                await base.OnInitializedAsync();
+
                 _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/rdp-connection.js");
+
+                _initialized = true;
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Failed to initialized. Error: {ex.Message}");
             }
         }
 
@@ -58,7 +79,7 @@ namespace ShineGuacamole.Client.Pages
         /// <returns></returns>
         protected async Task Connect()
         {
-            await _module.InvokeVoidAsync("Connect", _id.ToString(), _display, _connectionId);
+            await _module.InvokeVoidAsync("Connect", _id.ToString(), _display, ConnectionId);
             _connected = true;
         }
 

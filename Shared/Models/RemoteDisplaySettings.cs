@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright 2022 ManuelExpunged
+// Copyright 2024 Gurpreet Raju
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,17 +13,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+// 
 #endregion
 
-namespace ShineGuacamole.Options
+namespace ShineGuacamole.Shared.Models
 {
-    public sealed class ClientOptions
+    public class RemoteDisplaySettings
     {
-        public const string Name = "Client";
-
-        public Dictionary<string, Dictionary<string, string>> DefaultArguments { get; set; } = new();
-
-        public Dictionary<string, List<string>> UnencryptedArguments { get; set; } = new();
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int Dpi { get; set; }
     }
 }

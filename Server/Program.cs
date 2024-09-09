@@ -1,7 +1,27 @@
+#region Copyright
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+#endregion
+
 using ShineGuacamole.Services;
 using ShineGuacamole.Options;
 using Serilog;
 using ShineGuacamole.Services.Interfaces;
+using ShineGuacamole.Library.DataAccess;
+
 
 var builder = WebApplication.CreateBuilder();
 
@@ -17,16 +37,17 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Host.UseSerilog();
+// Add serilog services to the container and read config from appsettings
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.Configure<GuacamoleSharpOptions>(builder.Configuration.GetSection(GuacamoleSharpOptions.Name));
 builder.Services.Configure<ClientOptions>(builder.Configuration.GetSection(ClientOptions.Name));
 builder.Services.Configure<GuacdOptions>(builder.Configuration.GetSection(GuacdOptions.Name));
 
 builder.Services.AddSingleton<RemoteConnectionService>();
 builder.Services.AddScoped<IConnectionManagerService, ConnectionManagerService>();
 
-builder.Services.AddHostedService<RemoteConnectionService>(provider => provider.GetService<RemoteConnectionService>());
+builder.Services.AddHostedService(provider => provider.GetService<RemoteConnectionService>());
 
 
 var app = builder.Build();
@@ -42,6 +63,8 @@ else
 {
     app.UseHsts();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();

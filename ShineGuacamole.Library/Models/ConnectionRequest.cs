@@ -2,6 +2,9 @@
 
 namespace ShineGuacamole.Services.Models
 {
+    /// <summary>
+    /// New connection request.
+    /// </summary>
     public class ConnectionRequest
     {
         /// <summary>

@@ -1,6 +1,25 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#region Copyright
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+#endregion
+
+using Microsoft.Extensions.Logging;
 using ShineGuacamole.Shared.Models;
 using ShineGuacamole.Services.Interfaces;
+using ShineGuacamole.Library.DataAccess;
 
 namespace ShineGuacamole.Services
 {
@@ -10,54 +29,36 @@ namespace ShineGuacamole.Services
     public class ConnectionManagerService : IConnectionManagerService
     {
         private readonly ILogger _logger;
+        private readonly IConnectionsDataAccess _connectionsDataAccess;
 
         /// <summary>
         /// Initializes the connection manager service.
         /// </summary>
-        public ConnectionManagerService(ILogger<ConnectionManagerService> logger) 
+        public ConnectionManagerService(ILogger<ConnectionManagerService> logger,
+            IConnectionsDataAccess connectionsDataAccess)
         {
             _logger = logger;
+            _connectionsDataAccess = connectionsDataAccess;
         }
 
-        /// <summary>
-        /// Gets the connection configuration for given connection identifier.
-        /// </summary>
-        /// <param name="connectionId">The connection identifier/string.</param>
-        /// <returns>An awaitable task that returns connection arguments dictionary.</returns>
-        public Task<Dictionary<string, string>> GetConnectionConfiguration(string connectionId)
+        /// <inheritdoc/>
+        public async Task<Dictionary<string, string>> GetConnectionConfiguration(string connectionId)
         {
             _logger.LogInformation(nameof(GetConnectionConfiguration) + $" - Called. Id: {connectionId}");
 
-            var connectionConfiguration = new Dictionary<string, string>
-            {
-                { "type", "RDP" },
-                { "hostname", "0.0.0.0" },
-                { "username", "user_name" },
-                { "password", "user_password" }
-            };
+            var connectionConfiguration = await _connectionsDataAccess.GetConnectionDetails(connectionId);
 
-            return Task.FromResult(connectionConfiguration);
+            return connectionConfiguration;
         }
 
-        /// <summary>
-        /// Gets the connections.
-        /// </summary>
-        /// <returns>An awaitable task that returns collection of <seealso cref="ConnectionInfo"/>.</returns>
-        public async Task<IEnumerable<ConnectionInfo>> GetConnections()
+        /// <inheritdoc/>
+        public async Task<IEnumerable<ConnectionInfo>> GetConnections(string userId)
         {
             _logger.LogInformation(nameof(GetConnectionConfiguration) + $" - Called.");
 
-            var connections = new List<ConnectionInfo>()
-            {
-                new()
-                {
-                  Id = "some_id",
-                  Name = "username",
-                  Type = "RDP"
-                }
-            };
+            var connections = await _connectionsDataAccess.GetConnections(userId);
 
-            return await Task.FromResult(connections);
+            return connections;
         }
     }
 }

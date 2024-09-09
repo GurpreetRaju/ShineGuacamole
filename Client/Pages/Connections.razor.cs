@@ -1,6 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
+using ShineGuacamole.Client.Components;
+using ShineGuacamole.Client.General;
 using ShineGuacamole.Client.Services;
 using ShineGuacamole.Shared.Models;
 
@@ -20,12 +23,6 @@ namespace ShineGuacamole.Client.Pages
         protected ConnectionService ConnectionService { get; set; }
 
         /// <summary>
-        /// Remote connections state.
-        /// </summary>
-        [Inject]
-        protected RemoteConnectionState State { get; set; }
-
-        /// <summary>
         /// Reference to the snackbar.
         /// </summary>
         [Inject]
@@ -38,6 +35,12 @@ namespace ShineGuacamole.Client.Pages
         protected NavigationManager Navigation { get; set; }
 
         /// <summary>
+        /// Appbar content provider.
+        /// </summary>
+        [CascadingParameter]
+        public AppBarContentProvider AppBarContentProvider { get; set; }
+
+        /// <summary>
         /// Called when this component is initialized.
         /// </summary>
         /// <returns></returns>
@@ -47,6 +50,7 @@ namespace ShineGuacamole.Client.Pages
 
             try
             {
+                AppBarContentProvider.SetPageTitle("Connections");
                 _connections = await ConnectionService.GetConnections();
             }
             catch (Exception ex)
@@ -63,8 +67,9 @@ namespace ShineGuacamole.Client.Pages
         {
             if (connectionInfo == null) return;
 
-            State.PendingConnectionId = connectionInfo.Id;
-            Navigation.NavigateTo(AppRoutes.RemoteConnection);
+            var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, connectionInfo.Id } };
+            var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
+            Navigation.NavigateTo(url);
         }
     }
 }

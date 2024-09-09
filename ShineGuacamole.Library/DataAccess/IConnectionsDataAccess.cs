@@ -17,26 +17,27 @@
 #endregion
 
 using ShineGuacamole.Shared.Models;
+using System;
 
-namespace ShineGuacamole.Services.Interfaces
+namespace ShineGuacamole.Library.DataAccess
 {
     /// <summary>
-    /// Manages the remote connection configurations.
+    /// Interface for Connection Data.
     /// </summary>
-    public interface IConnectionManagerService
+    public interface IConnectionsDataAccess
     {
         /// <summary>
-        /// Gets the connection configuration for given connection identifier.
+        /// Gets connection details.
         /// </summary>
-        /// <param name="connectionId">The connection identifier/string.</param>
-        /// <returns>An awaitable task that returns connection arguments dictionary.</returns>
-        Task<Dictionary<string, string>> GetConnectionConfiguration(string connectionId);
+        /// <param name="connectionId">The unique connection identifier.</param>
+        /// <returns>Dictionary containing the connection properties.</returns>
+        Task<Dictionary<string, string>> GetConnectionDetails(string connectionId);
 
         /// <summary>
-        /// Gets the connections.
+        /// Gets connections infos filtered by the given parameters.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>An awaitable task that returns collection of <seealso cref="ConnectionInfo"/>.</returns>
+        /// <returns>A collection of connection infos</returns>
         Task<IEnumerable<ConnectionInfo>> GetConnections(string userId);
     }
 }

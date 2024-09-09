@@ -1,10 +1,30 @@
-﻿using ShineGuacamole.Core;
+﻿#region Copyright
+//
+// Copyright 2022 ManuelExpunged
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#endregion
+
 using Serilog;
 using System.Net.WebSockets;
 using System.Text;
 
 namespace ShineGuacamole.Core
 {
+    /// <summary>
+    /// Client Socket.
+    /// </summary>
     public sealed class ClientSocket
     {
         private readonly ArraySegment<byte> _buffer;
@@ -13,6 +33,12 @@ namespace ShineGuacamole.Core
         private readonly WebSocket _socket;
         private readonly CancellationToken _shutdownToken;
 
+        /// <summary>
+        /// Initializes the Client Socket.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="socket">The web socket.</param>
+        /// <param name="shutdownToken">Shutdown cancellation token.</param>
         public ClientSocket(Guid id, WebSocket socket, CancellationToken shutdownToken)
         {
             _id = id;
@@ -22,6 +48,10 @@ namespace ShineGuacamole.Core
             _overflowBuffer = new StringBuilder();
         }
 
+        /// <summary>
+        /// Closes the socket.
+        /// </summary>
+        /// <returns></returns>
         public async Task CloseAsync()
         {
             try
@@ -42,6 +72,10 @@ namespace ShineGuacamole.Core
             }
         }
 
+        /// <summary>
+        /// Receive messages from the client.
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> ReceiveAsync()
         {
             WebSocketReceiveResult result;
@@ -67,6 +101,11 @@ namespace ShineGuacamole.Core
             return message.content;
         }
 
+        /// <summary>
+        /// Sends message to the client.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task SendAsync(string message)
         {
             Log.Debug("[{Id}] >>>G2C> {Message}", _id, message);

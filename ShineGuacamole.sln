@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Shared", "Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.Library", "ShineGuacamole.Library\ShineGuacamole.Library.csproj", "{F85B622E-35BB-446E-B966-61710900BFB6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShineGuacamole.DataAccess.SqlServer", "ShineGuacamole.DataAccess.SqlServer\ShineGuacamole.DataAccess.SqlServer.csproj", "{E4F32C82-4319-4553-871E-7D04B58428FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F85B622E-35BB-446E-B966-61710900BFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F85B622E-35BB-446E-B966-61710900BFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F85B622E-35BB-446E-B966-61710900BFB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4F32C82-4319-4553-871E-7D04B58428FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4F32C82-4319-4553-871E-7D04B58428FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4F32C82-4319-4553-871E-7D04B58428FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4F32C82-4319-4553-871E-7D04B58428FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
