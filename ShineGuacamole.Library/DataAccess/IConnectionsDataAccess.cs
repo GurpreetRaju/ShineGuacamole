@@ -39,5 +39,22 @@ namespace ShineGuacamole.Library.DataAccess
         /// <param name="userId">The user identifier.</param>
         /// <returns>A collection of connection infos</returns>
         Task<IEnumerable<ConnectionInfo>> GetConnections(string userId);
+
+        /// <summary>
+        /// Save a connection.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="connection">The connection information.</param>
+        /// <param name="properties">The connection properties.</param>
+        /// <returns></returns>
+        Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> properties);
+
+        /// <summary>
+        /// Remove a connection.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="connectionId">The connection identifier.</param>
+        /// <returns></returns>
+        Task RemoveConnection(string userId, string connectionId);
     }
 }

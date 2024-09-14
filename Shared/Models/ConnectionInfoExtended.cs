@@ -16,16 +16,21 @@
 // 
 #endregion
 
-namespace ShineGuacamole.Client
+namespace ShineGuacamole.Shared.Models
 {
     /// <summary>
-    /// Code behind file for <see cref="MainLayout"/>.
+    /// Stores the connection info and configuration.
     /// </summary>
-    public partial class MainLayout
+    public class ConnectionInfoExtended
     {
         /// <summary>
-        /// The application name to appear in the app bar.
+        /// The connection info.
         /// </summary>
-        public virtual string ApplicationName => "Shine Guacamole";
+        public ConnectionInfo ConnectionInfo { get; set; }
+
+        /// <summary>
+        /// The connection configuration.
+        /// </summary>
+        public Dictionary<string, string> Configuration { get; set; }
     }
 }

@@ -41,6 +41,6 @@ namespace ShineGuacamole.Shared.Models
         /// <summary>
         /// The image.
         /// </summary>
-        public string Image {  get; set; }
+        public byte[] Image {  get; set; }
     }
 }

@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShineGuacamole.Services;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Services.Models;
+using ShineGuacamole.Shared.Models;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Server.Controllers
@@ -85,6 +86,24 @@ namespace ShineGuacamole.Server.Controllers
             {
                 _logger.LogError(ex, "Failed to get connections list.");
                 return Problem("Failed to get connections request.", statusCode: 500);
+            }
+        }
+
+        [HttpGet("/save-connection")]
+        public async Task<IActionResult> SaveConnection([FromBody] ConnectionInfoExtended connection)
+        {
+            _logger.LogInformation("Save connection request.");
+
+            try
+            {
+                await _connectionManagerService.SaveConnection(null, connection.ConnectionInfo, connection.Configuration);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save connection.");
+                return Problem("Failed to save connection.", statusCode: 500);
             }
         }
     }

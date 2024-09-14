@@ -20,8 +20,7 @@ using ShineGuacamole.Services;
 using ShineGuacamole.Options;
 using Serilog;
 using ShineGuacamole.Services.Interfaces;
-using ShineGuacamole.Library.DataAccess;
-
+using ShineGuacamole.DataAccess.SqlServer;
 
 var builder = WebApplication.CreateBuilder();
 
@@ -46,6 +45,9 @@ builder.Services.Configure<GuacdOptions>(builder.Configuration.GetSection(GuacdO
 
 builder.Services.AddSingleton<RemoteConnectionService>();
 builder.Services.AddScoped<IConnectionManagerService, ConnectionManagerService>();
+
+//configure SQL Server data access.
+builder.Services.AddSqlServerDataAccess(builder.Configuration.GetConnectionString("SqlServerConnection"));
 
 builder.Services.AddHostedService(provider => provider.GetService<RemoteConnectionService>());
 

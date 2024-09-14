@@ -60,5 +60,21 @@ namespace ShineGuacamole.Services
 
             return connections;
         }
+
+        /// <inheritdoc/>
+        public async Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> connectionConfiguration)
+        {
+            _logger.LogInformation(nameof(SaveConnection) + $" - Called.");
+
+            await _connectionsDataAccess.SaveConnection(userId, connection, connectionConfiguration);
+        }
+
+        /// <inheritdoc/>
+        public async Task RemoveConnection(string userId, string connectionId)
+        {
+            _logger.LogInformation(nameof(RemoveConnection) + $" - Called.");
+
+            await _connectionsDataAccess.RemoveConnection(userId, connectionId);
+        }
     }
 }

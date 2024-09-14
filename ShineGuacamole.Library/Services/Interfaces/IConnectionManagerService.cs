@@ -38,5 +38,22 @@ namespace ShineGuacamole.Services.Interfaces
         /// <param name="userId">The user identifier.</param>
         /// <returns>An awaitable task that returns collection of <seealso cref="ConnectionInfo"/>.</returns>
         Task<IEnumerable<ConnectionInfo>> GetConnections(string userId);
+
+        /// <summary>
+        /// Save a connection.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="connection">The connection info.</param>
+        /// <param name="connectionConfiguration">The connection configuration.</param>
+        /// <returns></returns>
+        Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> connectionConfiguration);
+
+        /// <summary>
+        /// Remove a connection.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="connectionId">The connection identifier.</param>
+        /// <returns></returns>
+        Task RemoveConnection(string userId, string connectionId);
     }
 }

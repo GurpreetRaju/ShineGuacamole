@@ -71,5 +71,28 @@ namespace ShineGuacamole.Client.Pages
             var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
             Navigation.NavigateTo(url);
         }
+
+        /// <summary>
+        /// Gets the image source from bytes data.
+        /// </summary>
+        /// <param name="imageData"></param>
+        /// <returns></returns>
+        private string GetImageSrc(byte[] imageData)
+        {
+            try
+            {
+                if (imageData != null)
+                {
+                    var bytesString = Convert.ToBase64String(imageData);
+
+                    return $"data:image/png;base64,{bytesString}";
+                }
+            } 
+            catch (Exception ex)
+            {
+                Snackbar.Add("Failed to parse image data.");
+            }
+            return "images/rdp-image.png";
+        }
     }
 }
