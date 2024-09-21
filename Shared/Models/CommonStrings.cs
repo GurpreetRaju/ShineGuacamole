@@ -16,39 +16,16 @@
 // 
 #endregion
 
-namespace ShineGuacamole.Shared.Models
+namespace ShineGuacamole.General
 {
     /// <summary>
-    /// The Connection Info.
+    /// Stores the common strings used across the client app.
     /// </summary>
-    public class ConnectionInfo
+    public static class CommonStrings
     {
         /// <summary>
-        /// The connection Identifier.
+        /// Connection Id parameter name.
         /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// The connection name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The connection type.
-        /// </summary>
-        public ConnectionType Type { get; set; }
-
-        /// <summary>
-        /// The image.
-        /// </summary>
-        public byte[] Image {  get; set; }
-    }
-
-    /// <summary>
-    /// The connection type.
-    /// </summary>
-    public enum ConnectionType
-    {
-        RDP
+        public const string ConnectionIdParameter = "connectionId";
     }
 }

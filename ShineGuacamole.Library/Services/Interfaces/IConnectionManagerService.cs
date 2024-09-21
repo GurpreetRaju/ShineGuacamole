@@ -33,6 +33,13 @@ namespace ShineGuacamole.Services.Interfaces
         Task<Dictionary<string, string>> GetConnectionConfiguration(string connectionId);
 
         /// <summary>
+        /// Gets the connection properties for given connection identifier.
+        /// </summary>
+        /// <param name="connectionId">The connection identifier/string.</param>
+        /// <returns>An awaitable task that returns connection arguments dictionary.</returns>
+        Task<IConnectionProperties> GetConnectionProperties(string connectionId);
+
+        /// <summary>
         /// Gets the connections.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
@@ -44,9 +51,9 @@ namespace ShineGuacamole.Services.Interfaces
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="connection">The connection info.</param>
-        /// <param name="connectionConfiguration">The connection configuration.</param>
+        /// <param name="connectionProperties">The connection properties.</param>
         /// <returns></returns>
-        Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> connectionConfiguration);
+        Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties connectionProperties);
 
         /// <summary>
         /// Remove a connection.
@@ -55,5 +62,12 @@ namespace ShineGuacamole.Services.Interfaces
         /// <param name="connectionId">The connection identifier.</param>
         /// <returns></returns>
         Task RemoveConnection(string userId, string connectionId);
+
+        /// <summary>
+        /// Gets the connection with properties.
+        /// </summary>
+        /// <param name="connectionId">The connection identifier.</param>
+        /// <returns></returns>
+        Task<(ConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId);
     }
 }

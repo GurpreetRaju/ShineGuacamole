@@ -1,0 +1,24 @@
+﻿
+<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="@HeightStyle">
+    <MudText>@Message</MudText>
+</MudStack>
+
+@code {
+
+    /// <summary>
+    /// The message.
+    /// </summary>
+    [Parameter]
+    public string Message { get; set; }
+
+    /// <summary>
+    /// The height.
+    /// </summary>
+    [Parameter]
+    public string Height { get; set; }
+
+    /// <summary>
+    /// The height style.
+    /// </summary>
+    private string HeightStyle => string.IsNullOrEmpty(Height) ? null : $"height: {Height}";
+}

@@ -19,8 +19,7 @@ public partial class ShineGuacContext : DbContext
     {
         modelBuilder.Entity<Connection>(entity =>
         {
-            entity.HasNoKey();
-
+            entity.Property(e => e.ConnectionId).ValueGeneratedNever();
             entity.Property(e => e.Image).HasColumnType("image");
             entity.Property(e => e.Name)
                 .IsRequired()

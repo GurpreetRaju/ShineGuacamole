@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using ShineGuacamole.Shared.Models;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Library.DataAccess;
+using Newtonsoft.Json;
 
 namespace ShineGuacamole.Services
 {
@@ -46,9 +47,29 @@ namespace ShineGuacamole.Services
         {
             _logger.LogInformation(nameof(GetConnectionConfiguration) + $" - Called. Id: {connectionId}");
 
-            var connectionConfiguration = await _connectionsDataAccess.GetConnectionDetails(connectionId);
+            var connectionWithProps = await _connectionsDataAccess.GetConnectionWithProperties(connectionId);
 
-            return connectionConfiguration;
+            try
+            {
+                var connectionConfiguration = JsonConvert.DeserializeObject<Dictionary<string, string>>(connectionWithProps.PropertiesJson);
+
+                connectionConfiguration.Add("type", connectionWithProps.Info.Type.ToString().ToLowerInvariant());
+
+                return connectionConfiguration;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to get the properties of connection {connectionId}. {ex}");
+                throw;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<IConnectionProperties> GetConnectionProperties(string connectionId)
+        {
+            _logger.LogInformation(nameof(GetConnectionProperties) + $" - Called. Id: {connectionId}");
+
+            return await _connectionsDataAccess.GetConnectionProperties(connectionId);
         }
 
         /// <inheritdoc/>
@@ -62,11 +83,11 @@ namespace ShineGuacamole.Services
         }
 
         /// <inheritdoc/>
-        public async Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> connectionConfiguration)
+        public async Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties properties)
         {
             _logger.LogInformation(nameof(SaveConnection) + $" - Called.");
 
-            await _connectionsDataAccess.SaveConnection(userId, connection, connectionConfiguration);
+            await _connectionsDataAccess.SaveConnection(userId, connection, properties);
         }
 
         /// <inheritdoc/>
@@ -75,6 +96,26 @@ namespace ShineGuacamole.Services
             _logger.LogInformation(nameof(RemoveConnection) + $" - Called.");
 
             await _connectionsDataAccess.RemoveConnection(userId, connectionId);
+        }
+        
+        /// <inheritdoc/>
+        public async Task<(ConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId)
+        {
+            _logger.LogInformation(nameof(GetConnection) + $" - Called. Id: {connectionId}");
+
+            var result = await _connectionsDataAccess.GetConnectionWithProperties(connectionId);
+            IConnectionProperties properties;
+            try
+            {
+                properties = JsonConvert.DeserializeObject<ConnectionProperties>(result.PropertiesJson);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to parse the connection properties for {connectionId}. {ex}");
+                throw;
+            }
+
+            return (result.Info, properties);
         }
     }
 }

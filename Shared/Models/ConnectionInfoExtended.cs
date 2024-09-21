@@ -16,21 +16,49 @@
 // 
 #endregion
 
+using Newtonsoft.Json;
+
 namespace ShineGuacamole.Shared.Models
 {
     /// <summary>
-    /// Stores the connection info and configuration.
+    /// The interface for connection properties.
     /// </summary>
-    public class ConnectionInfoExtended
+    public interface IConnectionProperties
     {
         /// <summary>
-        /// The connection info.
+        /// The hostname.
         /// </summary>
-        public ConnectionInfo ConnectionInfo { get; set; }
+        string Hostname { get; }
+    }
+
+    /// <summary>
+    /// Stores the connection info and configuration.
+    /// </summary>
+    public class ConnectionProperties : IConnectionProperties
+    {
+        /// <summary>
+        /// The Hostname.
+        /// </summary>
+        [JsonProperty("hostname")]
+        public string Hostname { get; set; }
 
         /// <summary>
-        /// The connection configuration.
+        /// The username.
         /// </summary>
-        public Dictionary<string, string> Configuration { get; set; }
+        [JsonProperty("username")]
+        public string Username { get; set; }
+
+        /// <summary>
+        /// The password.
+        /// </summary>
+        [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// The remote app.
+        /// </summary>
+        [JsonProperty("remote-app", NullValueHandling = NullValueHandling.Ignore)]
+
+        public string RemoteApp { get; set; }
     }
 }

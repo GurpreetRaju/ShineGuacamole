@@ -1,0 +1,47 @@
+﻿@using ShineGuacamole.Client.Pages
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using ShineGuacamole.Client.Components
+
+@rendermode RenderMode.InteractiveServer
+
+<MudDialog>
+    <TitleContent>
+        @(string.IsNullOrEmpty(ConnectionId) ? "Add Connection" : "Update Connection")
+    </TitleContent>
+    <DialogContent>
+        @if (_isLoading)
+        {
+            <LoadingComponent />
+        }
+        else if (_connection != null && _properties != null)
+        {
+            <MudForm @ref="form">                
+                <MudStack>
+                    <MudPaper Class="pa-4">
+                        <MudTextField T="string" Label="Name" @bind-Value="_connection.Name" Required="true" RequiredError="Name is required!" />
+                        <MudTextField T="byte[]" Label="Image" @bind-Value="_connection.Image" />
+                    </MudPaper>            
+                    <MudPaper Class="pa-4">
+                        <MudTextField T="string" Label="Hostname" @bind-Value="_properties.Hostname"
+                                        Required="true" RequiredError="Hostname is required!" />
+                        <MudTextField T="string" Label="Username" @bind-Value="_properties.Username"
+                                        Required="true" RequiredError="Username is required!" />
+                        <MudTextField T="string" Label="Password" @bind-Value="_properties.Password"
+                                        InputType="InputType.Password" />
+                        <MudTextField T="string" Label="Remote App" @bind-Value="_properties.RemoteApp"
+                                        HelperText="e.g. ||wmplayer" />
+                    </MudPaper>            
+                </MudStack>
+            </MudForm>
+        }
+        else
+        {
+            <ErrorMessage Height="5rem" Message="Nothing to show here!"></ErrorMessage>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => SaveConnection())">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
+    </DialogActions>
+</MudDialog>

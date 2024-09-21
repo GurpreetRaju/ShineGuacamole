@@ -1,0 +1,17 @@
+﻿
+<MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <span class="loader"></span>
+    @if (ShowLabel)
+    {
+        <MudText>Loading</MudText>
+    }
+</MudStack>
+
+@code {
+
+    /// <summary>
+    /// Show loading label.
+    /// </summary>
+    [Parameter]
+    public bool ShowLabel { get; set; }
+}

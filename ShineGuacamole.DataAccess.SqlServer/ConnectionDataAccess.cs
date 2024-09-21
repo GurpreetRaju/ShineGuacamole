@@ -45,16 +45,24 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task<Dictionary<string, string>> GetConnectionDetails(string connectionId)
+        public async Task<ConnectionInfo> GetConnectionInfo(string connectionId)
         {
-            _logger.LogDebug($"Get connection details. Connection Id: {connectionId}");
+            _logger.LogDebug($"Get connection. Connection Id: {connectionId}");
 
-            var connection = await _context.Connections.FindAsync(connectionId);
+            return ToConnectionInfo(await FindConnection(connectionId));
+        }
+
+        /// <inheritdoc/>
+        public async Task<IConnectionProperties> GetConnectionProperties(string connectionId)
+        {
+            _logger.LogDebug($"Get connection properties. Connection Id: {connectionId}");
+
+            var connection = await FindConnection(connectionId);
             if (connection?.Properties == null) throw new InvalidOperationException($"{connectionId} is not a valid connection");
 
             try
             {
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(connection.Properties);
+                return JsonConvert.DeserializeObject<IConnectionProperties>(connection.Properties);
             }
             catch (Exception ex)
             {
@@ -64,23 +72,30 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <inheritdoc/>
+        public async Task<(ConnectionInfo Info, string PropertiesJson)> GetConnectionWithProperties(string connectionId)
+        {
+            _logger.LogDebug($"Get connection with properties. Connection Id: {connectionId}");
+
+            var connection = await FindConnection(connectionId);
+            if (connection == null) throw new InvalidOperationException($"{connectionId} is not a valid connection");
+
+            var connectionInfo = ToConnectionInfo(connection);
+            
+            return (connectionInfo, connection.Properties);
+        }
+
+        /// <inheritdoc/>
         public async Task<IEnumerable<ConnectionInfo>> GetConnections(string userId)
         {
             _logger.LogDebug($"Get connections. User Id: {userId}");
 
             return await _context.Connections.AsQueryable()
                 .Where(c => c.UserId == userId)
-                .Select(c => new ConnectionInfo
-                {
-                    Id = c.ConnectionId.ToString(),
-                    Image = c.Image,
-                    Name = c.Name,
-                    Type = c.Type
-                }).ToListAsync();
+                .Select(c => ToConnectionInfo(c)).ToListAsync();
         }
 
         /// <inheritdoc/>
-        public async Task SaveConnection(string userId, ConnectionInfo connection, Dictionary<string, string> properties)
+        public async Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties properties)
         {
             _logger.LogDebug($"Add connection. Connection: {connection}");
 
@@ -96,19 +111,19 @@ namespace ShineGuacamole.DataAccess.SqlServer
                     {
                         Name = connection.Name,
                         Image = connection.Image,
-                        Type = connection.Type,
+                        Type = connection.Type.ToString(),
                         UserId = userId,
                         Properties = json
                     });
                 }
                 else
                 {
-                    var dbConnection = await _context.Connections.FindAsync(connection.Id);
+                    var dbConnection = await FindConnection(connection.Id);
                     if (dbConnection == null) throw new InvalidOperationException($"{connection.Id} is not a valid connection.");
 
                     dbConnection.Name = connection.Name;
                     dbConnection.Image = connection.Image;
-                    dbConnection.Type = connection.Type;
+                    dbConnection.Type = connection.Type.ToString();
                     dbConnection.UserId = userId;
                     dbConnection.Properties = json;
                 }
@@ -131,7 +146,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
 
             try
             {
-                var dbConnection = await _context.Connections.FindAsync(connectionId);
+                var dbConnection = await FindConnection(connectionId);
                 if (dbConnection == null) throw new InvalidOperationException($"{connectionId} is not a valid connection.");
 
                 _context.Connections.Remove(dbConnection);
@@ -142,6 +157,35 @@ namespace ShineGuacamole.DataAccess.SqlServer
                 _logger.LogError($"Failed to remove connection {connectionId}. {ex}");
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Gets the connection with given connection id.
+        /// </summary>
+        /// <param name="connectionId">The connection identifier.</param>
+        /// <returns></returns>
+        private async Task<Connection> FindConnection(string connectionId)
+        {
+            var connection = await _context.Connections.FindAsync(Guid.Parse(connectionId));
+            if (connection == null) throw new InvalidOperationException($"{connectionId} is not a valid connection");
+
+            return connection;
+        }
+
+        /// <summary>
+        /// Converts Connection to ConnectionInfo.
+        /// </summary>
+        /// <param name="connection">The connection object.</param>
+        /// <returns></returns>
+        private static ConnectionInfo ToConnectionInfo(Connection connection)
+        {
+            return new ConnectionInfo
+            {
+                Id = connection.ConnectionId.ToString(),
+                Image = connection.Image,
+                Name = connection.Name,
+                Type = Enum.Parse<ConnectionType>(connection.Type)
+            };
         }
     }
 }

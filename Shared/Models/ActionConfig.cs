@@ -16,39 +16,38 @@
 // 
 #endregion
 
+using Microsoft.AspNetCore.Components.Routing;
+
 namespace ShineGuacamole.Shared.Models
 {
     /// <summary>
-    /// The Connection Info.
+    /// Action configuration.
     /// </summary>
-    public class ConnectionInfo
+    public class ActionConfig
     {
         /// <summary>
-        /// The connection Identifier.
+        /// The href link for action.
         /// </summary>
-        public string Id { get; set; }
+        public string Href { get; set; }
 
         /// <summary>
-        /// The connection name.
+        /// The onlick action to invoke.
         /// </summary>
-        public string Name { get; set; }
+        public Action OnClick { get; set; }
 
         /// <summary>
-        /// The connection type.
+        /// The action text.
         /// </summary>
-        public ConnectionType Type { get; set; }
+        public string Text { get; set; }
 
         /// <summary>
-        /// The image.
+        /// The action icon.
         /// </summary>
-        public byte[] Image {  get; set; }
-    }
+        public string Icon { get; set; }
 
-    /// <summary>
-    /// The connection type.
-    /// </summary>
-    public enum ConnectionType
-    {
-        RDP
+        /// <summary>
+        /// The url match if <see cref="Href"/> is provided.
+        /// </summary>
+        public NavLinkMatch Match { get; set; }
     }
 }

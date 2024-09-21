@@ -1,0 +1,9 @@
+﻿.connections ::deep .mud-grid-item .mud-paper {
+    position: relative;
+}
+
+.connections ::deep .mud-grid-item .mud-paper .conn-options-button{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}

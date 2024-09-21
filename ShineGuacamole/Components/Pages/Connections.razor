@@ -1,0 +1,52 @@
+﻿@using ShineGuacamole.Client.Pages
+@using ShineGuacamole.Client.Components
+
+@attribute [Route(AppRoutes.Connections)]
+
+@rendermode RenderMode.InteractiveServer
+
+<PageView PageTitle="Connections" PageActions="PageActions">
+    @if (_isLoading)
+    {
+        <LoadingComponent />
+    }
+    else if (_connections == null || !_connections.Any())
+    {
+        <MudStack Class="align-content-center">
+            <MudIcon Icon="@Icon.Empty"></MudIcon>
+            <MudText Class="">There is nothing show.</MudText>
+        </MudStack>
+    }
+    else
+    {
+        <div class="connections">
+            <MudGrid>
+                @foreach (var connection in _connections)
+                {
+                    <MudItem xs="3">
+                        <MudPaper MinHeight="100px" Class="d-flex flex-column align-center justify-center mud-width-full">
+                            <MudIconButton Variant="Variant.Text" Class="conn-options-button"
+                                           Icon="@Icons.Material.Filled.MoreVert"
+                                           OnClick="@(() => EditConnection(connection))"
+                                           Size="Size.Small">
+                            </MudIconButton>
+                            <MudLink OnClick="@(() => Connect(connection))">
+                                <MudAvatar Variant="Variant.Filled">
+                                    @if (connection.Image == null)
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.Computer"></MudIcon>
+                                    }
+                                    else
+                                    {
+                                        <MudImage Src="@GetImageSrc(connection.Image)" Alt="@connection.Type.ToString()" />
+                                    }
+                                </MudAvatar>
+                                <MudText>@connection.Name</MudText>
+                            </MudLink>
+                        </MudPaper>
+                    </MudItem>
+                }
+            </MudGrid>
+        </div>
+    }
+</PageView>
