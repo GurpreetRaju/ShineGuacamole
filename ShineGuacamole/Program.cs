@@ -6,6 +6,11 @@ using ShineGuacamole.Services;
 using ShineGuacamole.DataAccess.SqlServer;
 using MudBlazor.Services;
 using ShineGuacamole.Shared;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +47,20 @@ builder.Services.AddSqlServerDataAccess(builder.Configuration.GetConnectionStrin
 
 builder.Services.AddHostedService(provider => provider.GetService<RemoteConnectionService>());
 
+builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, "AzureAd");
+
+builder.Services.AddControllersWithViews()
+                .AddMicrosoftIdentityUI();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = options.DefaultPolicy;
+});
+
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor()
+                .AddMicrosoftIdentityConsentHandler();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,6 +82,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
