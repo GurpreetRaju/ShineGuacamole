@@ -1,9 +1,14 @@
-﻿@using ShineGuacamole.Shared
+﻿@using Microsoft.AspNetCore.Authorization
+@using ShineGuacamole.Client.Shared
+@using ShineGuacamole.Shared
 @using ShineGuacamole.Client.Components
 
 @attribute [Route(AppRoutes.RemoteConnection)];
+@attribute [Authorize]
 
 @rendermode RenderMode.InteractiveWebAssembly
+
+@inherits ShineComponentBase<RemoteConnection>
 
 <PageView PageTitle="Remote Connection" PageActions="@PageActions">
     @if (!_initialized)

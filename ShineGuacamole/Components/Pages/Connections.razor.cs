@@ -49,12 +49,6 @@ namespace ShineGuacamole.Components.Pages
         private IDialogService DialogService { get; set; }
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        [Inject]
-        private ILogger<Connections> Logger { get; set; }
-
-        /// <summary>
         /// Page actions.
         /// </summary>
         protected IEnumerable<ActionConfig> PageActions => [
@@ -70,7 +64,7 @@ namespace ShineGuacamole.Components.Pages
             try
             {
                 await base.OnInitializedAsync();
-                _connections = await ConnectionService.GetConnections("gurpreet");
+                _connections = await ConnectionService.GetConnections(UserId);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using Serilog;
+using ShineGuacamole.Client;
 using ShineGuacamole.Shared;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,5 +17,8 @@ builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().Cre
 
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IAppBarContentProvider, AppBarContentProvider>();
+builder.Services.AddAuthorizationCore(); 
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 
 await builder.Build().RunAsync();

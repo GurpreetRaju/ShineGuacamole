@@ -1,9 +1,11 @@
 ﻿@using ShineGuacamole.Client.Pages
 @using ShineGuacamole.Client.Components
+@using ShineGuacamole.Client.Shared
 
 @attribute [Route(AppRoutes.Connections)]
-
 @rendermode RenderMode.InteractiveServer
+
+@inherits ShineComponentBase<Connections>
 
 <PageView PageTitle="Connections" PageActions="PageActions">
     @if (_isLoading)

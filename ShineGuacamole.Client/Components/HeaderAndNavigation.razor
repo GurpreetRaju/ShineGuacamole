@@ -2,26 +2,24 @@
 @using ShineGuacamole.Client.Shared
 @using ShineGuacamole.Shared.Models
 
-<CascadingAuthenticationState>
-    <PageTitle>@AppBarContentProvider.PageTitle</PageTitle>
-    <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5">@ApplicationName</MudText>
-        <MudText Class="ml-3">@AppBarContentProvider.PageTitle</MudText>
-        <MudSpacer />
-        @RenderActions(AppBarContentProvider.Actions)
-        <LoginDisplay></LoginDisplay>
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" OpenMiniOnHover="true" Variant="DrawerVariant.Mini" Elevation="2" 
-               ClipMode="DrawerClipMode.Always" Fixed="true">
-        <MudNavMenu>
-            @foreach (var action in _navItems)
-            {
-                <MudNavLink Href="@action.Href" Icon="@action.Icon" Match="action.Match">@action.Text</MudNavLink>
-            }
-        </MudNavMenu>
-    </MudDrawer>
-</CascadingAuthenticationState>
+<PageTitle>@AppBarContentProvider.PageTitle</PageTitle>
+<MudAppBar>
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+    <MudText Typo="Typo.h5">@ApplicationName</MudText>
+    <MudText Class="ml-3">@AppBarContentProvider.PageTitle</MudText>
+    <MudSpacer />
+    @RenderActions(AppBarContentProvider.Actions)
+    <LoginDisplay />
+</MudAppBar>
+<MudDrawer @bind-Open="_drawerOpen" OpenMiniOnHover="true" Variant="DrawerVariant.Mini" Elevation="2" 
+            ClipMode="DrawerClipMode.Always" Fixed="true">
+    <MudNavMenu>
+        @foreach (var action in _navItems)
+        {
+            <MudNavLink Href="@action.Href" Icon="@action.Icon" Match="action.Match">@action.Text</MudNavLink>
+        }
+    </MudNavMenu>
+</MudDrawer>
 
 @code {
 

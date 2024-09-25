@@ -23,18 +23,6 @@ namespace ShineGuacamole.Client.Pages
         protected IJSRuntime JS { get; set; }
 
         /// <summary>
-        /// The snackbar.
-        /// </summary>
-        [Inject]
-        protected ISnackbar Snackbar { get; set; }
-
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        [Inject]
-        private ILogger<RemoteConnection> Logger { get; set; }
-
-        /// <summary>
         /// The connection identifier.
         /// </summary>
         [SupplyParameterFromQuery]
@@ -62,9 +50,7 @@ namespace ShineGuacamole.Client.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to initialize: {ex}");
-
-                Snackbar.Add($"Failed to initialized. Error: {ex.Message}");
+                NotifyAndLogError($"Failed to initialize", ex);
             }
         }
 
@@ -81,9 +67,7 @@ namespace ShineGuacamole.Client.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to connect: {ex}");
-
-                Snackbar.Add("Failed to connect.");
+                NotifyAndLogError("Failed to connect.", ex);
             }
         }
 
@@ -102,9 +86,7 @@ namespace ShineGuacamole.Client.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to disconnect: {ex}");
-
-                Snackbar.Add("Failed to disconnect.");
+               NotifyAndLogError("Failed to disconnect.", ex);
             }
         }
 

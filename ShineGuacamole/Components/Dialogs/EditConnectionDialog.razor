@@ -2,8 +2,11 @@
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using ShineGuacamole.Client.Components
+@using ShineGuacamole.Client.Shared
 
 @rendermode RenderMode.InteractiveServer
+
+@inherits ShineComponentBase<EditConnectionDialog>
 
 <MudDialog>
     <TitleContent>
@@ -17,20 +20,49 @@
         else if (_connection != null && _properties != null)
         {
             <MudForm @ref="form">                
-                <MudStack>
-                    <MudPaper Class="pa-4">
-                        <MudTextField T="string" Label="Name" @bind-Value="_connection.Name" Required="true" RequiredError="Name is required!" />
-                        <MudTextField T="byte[]" Label="Image" @bind-Value="_connection.Image" />
-                    </MudPaper>            
-                    <MudPaper Class="pa-4">
-                        <MudTextField T="string" Label="Hostname" @bind-Value="_properties.Hostname"
-                                        Required="true" RequiredError="Hostname is required!" />
-                        <MudTextField T="string" Label="Username" @bind-Value="_properties.Username"
-                                        Required="true" RequiredError="Username is required!" />
-                        <MudTextField T="string" Label="Password" @bind-Value="_properties.Password"
-                                        InputType="InputType.Password" />
-                        <MudTextField T="string" Label="Remote App" @bind-Value="_properties.RemoteApp"
-                                        HelperText="e.g. ||wmplayer" />
+                <MudStack Style="min-width: 25rem;">
+                    <MudPaper Outlined="true" Class="pa-4">
+                        <MudTextField T="string" Label="Name"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_connection.Name"
+                                      Required="true" RequiredError="Name is required!" />
+                        <MudFileUpload T="IBrowserFile" FilesChanged="UploadImage">
+                            <ActivatorContent>
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Class="mt-3">
+                                    <MudText>Image</MudText>
+                                    <MudFab Color="Color.Primary" Size="Size.Small"
+                                            StartIcon="@Icons.Material.Filled.Image"
+                                            Label="Select File" />
+                                    @if (_connection.Image != null)
+                                    {
+                                        <MudLink OnClick="RemoveImage"><MudIcon Icon="@Icons.Material.Filled.Clear" /></MudLink>
+                                    }
+                                </MudStack>
+                            </ActivatorContent>
+                        </MudFileUpload>
+                    </MudPaper>
+                    <MudPaper Outlined="true" Class="pa-4 mb-3">
+                        <MudTextField T="string" Label="Hostname"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Hostname"
+                                      Required="true" RequiredError="Hostname is required!" />
+                        <MudTextField T="string" Label="Username"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Username"
+                                      Required="true" RequiredError="Username is required!" />
+                        <MudTextField T="string" Label="Password"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Password"
+                                      InputType="InputType.Password" />
+                        <MudTextField T="string" Label="Remote App"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.RemoteApp"
+                                      HelperText="e.g. ||wmplayer" />
                     </MudPaper>            
                 </MudStack>
             </MudForm>

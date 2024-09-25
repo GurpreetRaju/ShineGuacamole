@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared.Models;
+using System.IO;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Dialogs
@@ -27,12 +29,6 @@ namespace ShineGuacamole.Components.Dialogs
         /// </summary>
         [Inject]
         private ISnackbar Snackbar { get; set; }
-
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        [Inject]
-        private ILogger<EditConnectionDialog> Logger { get; set; }
 
         /// <summary>
         /// The connection id.
@@ -73,6 +69,36 @@ namespace ShineGuacamole.Components.Dialogs
         }
 
         /// <summary>
+        /// Upload the selected image.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private async Task UploadImage(IBrowserFile file)
+        {
+            try
+            {
+                if (file == null) return;
+
+                await using MemoryStream stream = new MemoryStream();
+                await file.OpenReadStream().CopyToAsync(stream);
+
+                _connection.Image = stream.ToArray();
+            }
+            catch (Exception ex)
+            {
+                NotifyAndLogError($"Failed to load the image {file.Name}.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Remove the image.
+        /// </summary>
+        private void RemoveImage()
+        {
+            _connection.Image = null;
+        }
+
+        /// <summary>
         /// Add new connection.
         /// </summary>
         /// <returns></returns>
@@ -80,7 +106,7 @@ namespace ShineGuacamole.Components.Dialogs
         { 
             try
             {
-                await ConnectionService.SaveConnection(string.Empty, _connection, _properties);
+                await ConnectionService.SaveConnection(UserId, _connection, _properties);
             }
             catch (Exception ex)
             {

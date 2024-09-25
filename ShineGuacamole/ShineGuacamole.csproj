@@ -10,6 +10,7 @@
     <ProjectReference Include="..\ShineGuacamole.Client\ShineGuacamole.Client.csproj" />
     <ProjectReference Include="..\ShineGuacamole.DataAccess.SqlServer\ShineGuacamole.DataAccess.SqlServer.csproj" />
     <ProjectReference Include="..\ShineGuacamole.Library\ShineGuacamole.Library.csproj" />
+    <PackageReference Include="Bromix.MudBlazor.MaterialDesignIcons" Version="7.4.47.56" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
@@ -24,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Components\Common\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

@@ -19,7 +19,7 @@ namespace ShineGuacamole.Client.Pages
         /// The logger.
         /// </summary>
         [Inject]
-        protected ILogger<PageView> Logger { get; set; }
+        private ILogger<PageView> Logger { get; set; }
 
         /// <summary>
         /// Page title.

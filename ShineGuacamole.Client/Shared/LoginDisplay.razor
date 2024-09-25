@@ -2,28 +2,36 @@
 @using Microsoft.AspNetCore.Components.Web
 @using MudBlazor
 
+@inherits ShineComponentBase<LoginDisplay>
+
 @inject NavigationManager Navigation
 
-<AuthorizeView>
-    <Authorized>
-        Hello, @context.User.Identity?.Name
-        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="BeginLogout">Log out</MudButton>
-    </Authorized>
-    <NotAuthorized>
-        <RedirectToLogin />
-    </NotAuthorized>
-</AuthorizeView>
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
+            <MudText>@UserName</MudText>
+            <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
+                            Variant="Variant.Text"
+                            Size="Size.Small"
+                            title="Log out"
+                            Class="ml-1"
+                            OnClick="Logout">               
+            </MudIconButton>
+        </MudChip>
+    </AuthorizeView>
+</CascadingAuthenticationState>
 
 @code{
-    private void BeginLogout()
+
+    private void Logout()
     {
         try
         {
             Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
         }
-        catch
+        catch (Exception ex)
         {
-            
+            NotifyAndLogError("Failed to logout.", ex);
         }
     }
 }
