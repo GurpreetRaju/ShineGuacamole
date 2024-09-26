@@ -17,6 +17,7 @@
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
+using ShineGuacamole.Client;
 
 namespace ShineGuacamole.Server.Controllers
 {
@@ -48,7 +49,21 @@ namespace ShineGuacamole.Server.Controllers
             {
                 _logger.LogInformation("Message: {message}", logEvent.RenderedMessage);
             }
-        }        
+        }
+
+        /// <summary>
+        /// Gets the user info.
+        /// </summary>
+        /// <returns></returns>
+        [Route("/authState")]
+        public IActionResult AuthState()
+        {
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                return Ok(UserInfo.FromClaimsPrincipal(User));
+            }
+            return Unauthorized();
+        }
     }
 
     /// <summary>

@@ -14,7 +14,6 @@ builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(Log.Logg
 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("ShineGuacamole.ServerAPI"));
-
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IAppBarContentProvider, AppBarContentProvider>();
 builder.Services.AddAuthorizationCore(); 

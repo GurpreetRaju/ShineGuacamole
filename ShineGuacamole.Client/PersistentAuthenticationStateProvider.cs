@@ -1,29 +1,49 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
 using System.Security.Claims;
+using System.Net.Http.Json;
 
 namespace ShineGuacamole.Client
 {
     /// <summary>
     /// Persistent authentication state provider.
     /// </summary>
-    internal sealed class PersistentAuthenticationStateProvider : AuthenticationStateProvider
+    public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private static readonly Task<AuthenticationState> defaultUnauthenticatedTask =
-            Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+        private static readonly AuthenticationState DefaultUnauthenticatedState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
-        private readonly Task<AuthenticationState> authenticationStateTask = defaultUnauthenticatedTask;
+        private readonly Task<AuthenticationState> _authenticationStateTask;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<PersistentAuthenticationStateProvider> _logger;
 
-        public PersistentAuthenticationStateProvider(PersistentComponentState state)
+        public PersistentAuthenticationStateProvider(HttpClient httpClient, ILogger<PersistentAuthenticationStateProvider> logger)
         {
-            if (!state.TryTakeFromJson<UserInfo>(nameof(UserInfo), out var userInfo) || userInfo is null)
-            {
-                return;
-            }
+            _httpClient = httpClient;
+            _logger = logger;
 
-            authenticationStateTask = Task.FromResult(new AuthenticationState(userInfo.ToClaimsPrincipal()));
+            _authenticationStateTask = LoadAuthenticationState();
         }
 
-        public override Task<AuthenticationState> GetAuthenticationStateAsync() => authenticationStateTask;
+        public override Task<AuthenticationState> GetAuthenticationStateAsync() => _authenticationStateTask;
+
+        private async Task<AuthenticationState> LoadAuthenticationState()
+        {
+            try
+            {
+                if (_authenticationStateTask == null)
+                {
+                    var res = await _httpClient.GetAsync("/authState");
+                    if (res.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        var info = await res.Content.ReadFromJsonAsync<UserInfo>();
+                        return new AuthenticationState(info.ToClaimsPrincipal());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error getting the auth state. {ex}");
+            }
+            return DefaultUnauthenticatedState;
+        }
     }
 }

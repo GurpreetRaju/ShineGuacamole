@@ -6,22 +6,46 @@
 
 @inject NavigationManager Navigation
 
-<CascadingAuthenticationState>
-    <AuthorizeView>
-        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
-            <MudText>@UserName</MudText>
-            <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
-                            Variant="Variant.Text"
-                            Size="Size.Small"
-                            title="Log out"
-                            Class="ml-1"
-                            OnClick="Logout">               
-            </MudIconButton>
-        </MudChip>
-    </AuthorizeView>
-</CascadingAuthenticationState>
+@if (CurrentUser?.Identity?.IsAuthenticated == true)
+{
+    <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
+        <MudText>@UserName</MudText>
+        <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
+                        Variant="Variant.Text"
+                        Size="Size.Small"
+                        title="Log out"
+                        Class="ml-1"
+                        OnClick="Logout">               
+        </MudIconButton>
+    </MudChip>
+}
+else
+{
+    <MudButton Color="Color.Error" OnClick="LogIn" Size="Size.Small"
+               StartIcon="@MaterialDesignIcons.Normal.Login" Variant="Variant.Filled">
+        Login
+    </MudButton>
+}
 
 @code{
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        var user = CurrentUser;
+    }
+
+    private void LogIn()
+    {
+        try
+        {
+            Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError("Failed to login.", ex);
+        }
+    }
 
     private void Logout()
     {
