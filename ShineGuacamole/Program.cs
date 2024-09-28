@@ -1,23 +1,15 @@
 using Serilog;
 using ShineGuacamole.Components;
-using ShineGuacamole.Options;
-using ShineGuacamole.Services.Interfaces;
-using ShineGuacamole.Services;
-using ShineGuacamole.DataAccess.SqlServer;
-using MudBlazor.Services;
-using ShineGuacamole.Shared;
 using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
+using ShineGuacamole;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveServerComponents();
 
+builder.Services.AddControllers();
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
@@ -31,32 +23,8 @@ builder.Services.AddSession(options =>
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddMudServices();
-
-builder.Services.Configure<ClientOptions>(builder.Configuration.GetSection(ClientOptions.Name));
-builder.Services.Configure<GuacdOptions>(builder.Configuration.GetSection(GuacdOptions.Name));
-
-builder.Services.AddScoped<IAppBarContentProvider, AppBarContentProvider>();
-
-builder.Services.AddSingleton<RemoteConnectionService>();
-builder.Services.AddScoped<IConnectionManagerService, ConnectionManagerService>();
-
-//configure SQL Server data access.
-builder.Services.AddSqlServerDataAccess(builder.Configuration.GetConnectionString("SqlServerConnection"));
-
-builder.Services.AddHostedService(provider => provider.GetService<RemoteConnectionService>());
-
-builder.Services.AddMicrosoftIdentityWebAppAuthentication(builder.Configuration, "AzureAd");
-
-builder.Services.AddControllersWithViews()
-                .AddMicrosoftIdentityUI();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = options.DefaultPolicy;
-});
-
-builder.Services.AddCascadingAuthenticationState();
+builder.Host.AddContainerServices(builder.Configuration);
+builder.Services.AddServices(builder.Configuration);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()
@@ -88,8 +56,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(ShineGuacamole.Client._Imports).Assembly);
+    .AddInteractiveServerRenderMode();
+
+app.UseWebSockets();
 
 app.Run();

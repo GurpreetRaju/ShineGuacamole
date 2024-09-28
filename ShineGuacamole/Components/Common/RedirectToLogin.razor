@@ -1,0 +1,15 @@
+@inject NavigationManager Navigation
+
+<MudIconButton Size="Size.Small" Icon="@MaterialDesignIcons.Normal.Login"
+               Variant="Variant.Filled"
+               Color="Color.Error"
+               Href="/MicrosoftIdentity/Account/SignIn">
+</MudIconButton>
+@RenderRedirect
+
+@code {
+    private RenderFragment RenderRedirect => __builder =>
+    {
+        Navigation.NavigateTo($"/MicrosoftIdentity/Account/SignIn", true);
+    };
+}

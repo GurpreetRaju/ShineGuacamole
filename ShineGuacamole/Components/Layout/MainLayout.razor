@@ -1,11 +1,20 @@
-@using ShineGuacamole.Client.Components
+@using ShineGuacamole.Components.Common
+@using ShineGuacamole.Shared
+
 @inherits LayoutComponentBase
 
-<MudThemeProvider @rendermode="RenderMode.InteractiveServer" />
-<MudDialogProvider @rendermode="RenderMode.InteractiveServer" />
-<MudSnackbarProvider @rendermode="RenderMode.InteractiveServer" />
+<MudThemeProvider @bind-IsDarkMode="@UserPreferences.DarkMode" Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-@Body
+<MudLayout>
+    <HeaderAndNavigation />
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

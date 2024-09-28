@@ -21,7 +21,7 @@ using ShineGuacamole.Services;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Services.Models;
 
-namespace ShineGuacamole.Server.Controllers
+namespace ShineGuacamole.Controllers
 {
     /// <summary>
     /// The Remote Connection Controller handles the remote connection requests.

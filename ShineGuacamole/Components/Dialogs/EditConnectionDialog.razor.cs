@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared.Models;
-using System.IO;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Dialogs

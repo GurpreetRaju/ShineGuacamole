@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using ShineGuacamole.Components.Dialogs;
-using ShineGuacamole.General;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared;
-using ShineGuacamole.Shared.Models;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Pages

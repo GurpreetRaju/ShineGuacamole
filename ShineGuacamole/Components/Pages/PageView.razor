@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+@if (Loading)
+{
+    <div class="mud-full-height">
+        <LoadingComponent ShowLabel="true" />
+    </div>
+}
+else
+{
+    @ChildContent
+}

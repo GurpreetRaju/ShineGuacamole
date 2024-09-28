@@ -8,11 +8,11 @@
         <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="app.css" />
         <link rel="stylesheet" href="ShineGuacamole.styles.css" />
-        <HeadOutlet/>
+        <HeadOutlet @rendermode="InteractiveServer"/>
     </head>
 
     <body>
-        <Routes/>
+        <Routes @rendermode="InteractiveServer"/>
         <script src="_framework/blazor.web.js"></script>
         <script src="_content/MudBlazor/MudBlazor.min.js"></script>
         <script src="js/guacamole-common-js/all.js"></script>
