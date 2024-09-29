@@ -57,11 +57,11 @@
             {
                 @if (string.IsNullOrEmpty(action.Href))
                 {
-                    <MudIconButton OnClick="action.OnClick" Icon="@action.Icon" Color="Color.Inherit" title="@action.Text"></MudIconButton>
+                    <MudIconButton OnClick="action.OnClick" Icon="@action.Icon" Color="Color.Inherit" Size="Size.Small" title="@action.Text"></MudIconButton>
                 }
                 else
                 {
-                    <MudIconButton Href="@action.Href" Icon="@action.Icon" Color="Color.Inherit" title="@action.Text"></MudIconButton>
+                    <MudIconButton Href="@action.Href" Icon="@action.Icon" Color="Color.Inherit" Size="Size.Small" title="@action.Text"></MudIconButton>
                 }
             }
         }
