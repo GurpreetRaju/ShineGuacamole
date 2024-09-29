@@ -1,4 +1,22 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿#region Copyright
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// 
+#endregion
+
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
@@ -22,12 +40,6 @@ namespace ShineGuacamole.Components.Dialogs
         /// </summary>
         [Inject]
         private IConnectionManagerService ConnectionService { get; set; }
-
-        /// <summary>
-        /// The snackbar.
-        /// </summary>
-        [Inject]
-        private ISnackbar Snackbar { get; set; }
 
         /// <summary>
         /// The connection id.
@@ -78,10 +90,11 @@ namespace ShineGuacamole.Components.Dialogs
             {
                 if (file == null) return;
 
-                await using MemoryStream stream = new MemoryStream();
-                await file.OpenReadStream().CopyToAsync(stream);
-
-                _connection.Image = stream.ToArray();
+                MemoryStream stream = new MemoryStream();
+                await file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(stream);
+                byte[] imageBytes = stream.ToArray();
+                
+                _connection.Image = imageBytes;
             }
             catch (Exception ex)
             {
@@ -109,9 +122,7 @@ namespace ShineGuacamole.Components.Dialogs
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to get connection details for {ConnectionId}. {ex}");
-
-                Snackbar.Add("Failed to get the connection details.");
+                NotifyAndLogError($"Failed to save connection details {ConnectionId}.", ex);
             }
         }
     }

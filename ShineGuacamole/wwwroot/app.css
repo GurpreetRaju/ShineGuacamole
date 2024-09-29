@@ -37,3 +37,12 @@ h1:focus {
     top: var(--mud-appbar-height);
     height: calc(100% - var(--mud-appbar-height));
 }
+
+.mud-input-control {
+    min-height: 4.1rem;
+}
+
+    .mud-input-control.mud-file-upload {
+        min-height: 3.125rem;
+        justify-content: center;
+    }
