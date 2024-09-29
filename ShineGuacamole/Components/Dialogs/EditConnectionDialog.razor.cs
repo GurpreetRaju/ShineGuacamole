@@ -47,6 +47,12 @@ namespace ShineGuacamole.Components.Dialogs
         [Parameter]
         public string ConnectionId { get; set; }
 
+        /// <summary>
+        /// The dialog instance.
+        /// </summary>
+        [CascadingParameter]
+        public MudDialogInstance Dialog { get; set; }
+
         /// <inheritdoc/>
         protected override async Task OnInitializedAsync()
         {
@@ -119,6 +125,10 @@ namespace ShineGuacamole.Components.Dialogs
             try
             {
                 await ConnectionService.SaveConnection(UserId, _connection, _properties);
+
+                Snackbar.Add("Connection saved succesfully.");
+
+                Dialog.Close();
             }
             catch (Exception ex)
             {

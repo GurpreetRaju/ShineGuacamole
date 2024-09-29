@@ -7,3 +7,19 @@
     right: 5px;
     top: 5px;
 }
+
+.connections ::deep .connection-tile {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-items: center;
+    height: 100%;
+}
+
+    .connections ::deep .connection-tile > div {
+        width: 100%;
+    }
+
+    .connections ::deep .connection-tile .mud-button-group-root .mud-button {
+        flex: 1;
+    }

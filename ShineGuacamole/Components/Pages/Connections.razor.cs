@@ -22,6 +22,7 @@ using MudBlazor;
 using ShineGuacamole.Components.Dialogs;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared;
+using System.Runtime.CompilerServices;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Pages
@@ -106,6 +107,25 @@ namespace ShineGuacamole.Components.Pages
                 var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, connectionInfo.Id } };
                 var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
                 Navigation.NavigateTo(url);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Failed to connect. Connection {connectionInfo?.Id}. {ex}");
+                Snackbar.Add("Failed to connect.");
+            }
+        }
+
+        /// <summary>
+        /// Show details.
+        /// </summary>
+        /// <param name="connectionInfo">The connection info.</param>
+        private async Task Details(ConnectionInfo connectionInfo)
+        {
+            try
+            {
+                if (connectionInfo == null) return;
+
+                await EditConnection(connectionInfo);
             }
             catch (Exception ex)
             {

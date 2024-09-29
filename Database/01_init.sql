@@ -4,7 +4,7 @@ GO
 /****** Object:  Table [dbo].[Connections] ******/
 
 CREATE TABLE [dbo].[Connections](
-	[ConnectionId] [uniqueidentifier] IDENTITY(1, 1) NOT NULL,
+	[ConnectionId] [uniqueidentifier] IDENTITY(1, 1) DEFAULT (NEWID()) NOT NULL,
 	[UserId] [varchar](80) NOT NULL,
 	[Name] [nvarchar](50) NOT NULL,
 	[Type] [nvarchar](10) NOT NULL,

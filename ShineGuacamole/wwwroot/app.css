@@ -46,3 +46,12 @@ h1:focus {
         min-height: 3.125rem;
         justify-content: center;
     }
+
+
+.mud-dialog .mud-dialog-actions {
+    justify-content: flex-start;
+    padding: 8px 24px;
+}
+.mud-dialog .mud-dialog-actions > div {
+    flex: 1;
+}

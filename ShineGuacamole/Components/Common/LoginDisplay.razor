@@ -28,14 +28,12 @@
 {
     <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
         <MudText>@UserName</MudText>
-        <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
-                        Variant="Variant.Text"
-                        Size="Size.Small"
-                        title="Log out"
-                        Class="ml-1"
-                        OnClick="Logout">               
-        </MudIconButton>
     </MudChip>
+    <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
+                   Variant="Variant.Filled" Size="Size.Small"
+                   title="Log out" Color="Color.Secondary"
+                   Class="mx-1" OnClick="Logout">
+    </MudIconButton>
 }
 else
 {

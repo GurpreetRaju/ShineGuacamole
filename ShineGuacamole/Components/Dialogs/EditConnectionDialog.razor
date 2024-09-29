@@ -34,56 +34,67 @@
         else if (_connection != null && _properties != null)
         {
             <MudForm @ref="form">                
-                <MudStack Style="min-width: 25rem;">
-                    <MudPaper Outlined="true" Class="pa-4">
-                        <MudTextField T="string" Label="Name"
-                                        Variant="Variant.Outlined"
-                                        Margin="Margin.Dense"
-                                        @bind-Value="_connection.Name"
-                                        Required="true" RequiredError="Name is required!" />
+                <MudGrid>
+                    <MudItem sm="6" xs="12">
+                        <MudPaper Outlined="true" Class="pa-4 mud-height-full">
+                            <MudTextField T="string" Label="Name"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_connection.Name"
+                                            Required="true" RequiredError="Name is required!" />
 
-                        <MudFileUpload T="IBrowserFile" FilesChanged="(f) => UploadImage(f)" Accept=".png,.jpg,.jpeg">
-                            <ActivatorContent>
-                                <MudStack Row="true" AlignItems="AlignItems.Center">
-                                    <MudText>Image</MudText>
-                                    <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled"
-                                                StartIcon="@Icons.Material.Filled.Image">
-                                        Upload
-                                    </MudButton>
+                            <MudFileUpload T="IBrowserFile" FilesChanged="(f) => UploadImage(f)" Accept=".png,.jpg,.jpeg">
+                                <ActivatorContent>
+                                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                                        <MudText>Image</MudText>
+                                        <MudButton Color="Color.Primary" Size="Size.Small" Variant="Variant.Filled"
+                                                    StartIcon="@Icons.Material.Filled.Image">
+                                            Upload
+                                        </MudButton>
+                                        @if (_connection?.Image != null)
+                                        {
+                                            <MudIconButton Size="Size.Small" Color="Color.Error"
+                                                            OnClick="RemoveImage"
+                                                            Icon="@Icons.Material.Filled.Clear" />
+                                        }
+                                    </MudStack>
+                                </ActivatorContent>
+                                <SelectedTemplate>
                                     @if (_connection?.Image.ToBase64Image() is string image)
                                     {
-                                        <MudImage Src="@image" Elevation="1" Height="50" Width="50" Class="rounded-lg" />                                    
-                                        <MudIconButton Size="Size.Small" Color="Color.Error"
-                                                        OnClick="RemoveImage"
-                                                        Icon="@Icons.Material.Filled.Clear" />
+                                        <div class="d-flex justify-center">
+                                            <MudImage Src="@image" Elevation="1" Height="100" Width="100" Class="rounded-lg mt-3" />
+                                        </div>
                                     }
-                                </MudStack>
-                            </ActivatorContent>
-                        </MudFileUpload>
-                    </MudPaper>
-                    <MudPaper Outlined="true" Class="pa-4 mb-3">
-                        <MudTextField T="string" Label="Hostname"
-                                        Variant="Variant.Outlined"
-                                        Margin="Margin.Dense"
-                                        @bind-Value="_properties.Hostname"
-                                        Required="true" RequiredError="Hostname is required!" />
-                        <MudTextField T="string" Label="Username"
-                                        Variant="Variant.Outlined"
-                                        Margin="Margin.Dense"
-                                        @bind-Value="_properties.Username"
-                                        Required="true" RequiredError="Username is required!" />
-                        <MudTextField T="string" Label="Password"
-                                        Variant="Variant.Outlined"
-                                        Margin="Margin.Dense"
-                                        @bind-Value="_properties.Password"
-                                        InputType="InputType.Password" />
-                        <MudTextField T="string" Label="Remote App"
-                                        Variant="Variant.Outlined"
-                                        Margin="Margin.Dense"
-                                        @bind-Value="_properties.RemoteApp"
-                                        HelperText="e.g. ||wmplayer" />
-                    </MudPaper>            
-                </MudStack>
+                                </SelectedTemplate>
+                            </MudFileUpload>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudPaper Outlined="true" Class="pa-4 mud-height-full">
+                            <MudTextField T="string" Label="Hostname"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_properties.Hostname"
+                                            Required="true" RequiredError="Hostname is required!" />
+                            <MudTextField T="string" Label="Username"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_properties.Username"
+                                            Required="true" RequiredError="Username is required!" />
+                            <MudTextField T="string" Label="Password"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_properties.Password"
+                                            InputType="InputType.Password" />
+                            <MudTextField T="string" Label="Remote App"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_properties.RemoteApp"
+                                            HelperText="e.g. ||wmplayer" />
+                        </MudPaper>  
+                    </MudItem>
+                </MudGrid>
             </MudForm>
         }
         else
@@ -92,7 +103,11 @@
         }
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => SaveConnection())">Save</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
+        <MudStack Row="true">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" DropShadow="false" OnClick="@(() => Dialog.Cancel())">Close</MudButton>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => SaveConnection())">Save</MudButton>
+        </MudStack>
     </DialogActions>
 </MudDialog>

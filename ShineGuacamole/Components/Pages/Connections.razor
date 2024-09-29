@@ -43,14 +43,14 @@
                 @foreach (var connection in _connections)
                 {
                     <MudItem xs="3">
-                        <MudPaper MinHeight="100px" Class="d-flex flex-column align-center justify-center mud-width-full">
+                        <MudPaper Class="connection-tile">
                             <MudIconButton Variant="Variant.Text" Class="conn-options-button"
-                                           Icon="@Icons.Material.Filled.MoreVert"
+                                           Icon="@Icons.Material.Filled.Edit"
                                            OnClick="@(() => EditConnection(connection))"
                                            Size="Size.Small">
                             </MudIconButton>
-                            <MudLink OnClick="@(() => Connect(connection))">
-                                <MudAvatar Variant="Variant.Filled">
+                            <MudStack Class="py-3" AlignItems="AlignItems.Center">
+                                <MudAvatar Variant="Variant.Filled" Size="Size.Large">
                                     @if (connection.Image == null)
                                     {
                                         <MudIcon Icon="@Icons.Material.Filled.Computer"></MudIcon>
@@ -60,8 +60,20 @@
                                         <MudImage Src="@GetImageSrc(connection.Image)" Alt="@connection.Type.ToString()" />
                                     }
                                 </MudAvatar>
-                                <MudText>@connection.Name</MudText>
-                            </MudLink>
+                                <MudText Align="Align.Center">@connection.Name</MudText>
+                            </MudStack>
+                            <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" OverrideStyles="false">
+                                <MudButton OnClick="@(() => Details(connection))"
+                                           Variant="Variant.Filled" Size="Size.Small"
+                                           Color="Color.Secondary">
+                                    Details
+                                </MudButton>
+                                <MudButton OnClick="@(() => Connect(connection))"
+                                           Variant="Variant.Filled" Size="Size.Small"
+                                           Color="Color.Primary">
+                                    Connect
+                                </MudButton>
+                            </MudButtonGroup>
                         </MudPaper>
                     </MudItem>
                 }
