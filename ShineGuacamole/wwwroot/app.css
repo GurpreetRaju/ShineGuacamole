@@ -52,6 +52,16 @@ h1:focus {
     justify-content: flex-start;
     padding: 8px 24px;
 }
+
 .mud-dialog .mud-dialog-actions > div {
     flex: 1;
+}
+
+.mud-chip {
+    overflow: hidden;
+}
+
+.mud-chip-content, .mud-chip-content p {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

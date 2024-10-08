@@ -26,52 +26,34 @@
 
 @if (CurrentUser?.Identity?.IsAuthenticated == true)
 {
-    <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
-        <MudText>@UserName</MudText>
-    </MudChip>
-    <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
-                   Variant="Variant.Filled" Size="Size.Small"
-                   title="Log out" Color="Color.Secondary"
-                   Class="mx-1" DropShadow="false" OnClick="Logout">
-    </MudIconButton>
-}
-else
-{
-    <MudButton Color="Color.Error" OnClick="LogIn" Size="Size.Small"
-               StartIcon="@MaterialDesignIcons.Normal.Login" Variant="Variant.Filled">
-        Login
-    </MudButton>
+    @if (Compact)
+    {
+        <MudAvatar Color="Color.Success" Variant="Variant.Filled">
+            <MudText>@_initials</MudText>
+        </MudAvatar>
+    }
+    else
+    {
+        <MudChip T="string" Color="Color.Success" Icon="@Icons.Material.Filled.Person">
+            <MudText>@UserName</MudText>
+        </MudChip>
+    }
 }
 
 @code{
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
+    private string _initials;
 
-        var user = CurrentUser;
-    }
+    /// <summary>
+    /// Whether to show the compact version.
+    /// </summary>
+    [Parameter]
+    public bool Compact { get; set; }
 
-    private void LogIn()
+    /// <inheritdoc/>
+    protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
-        }
-        catch (Exception ex)
-        {
-            NotifyAndLogError("Failed to login.", ex);
-        }
-    }
+        await base.OnInitializedAsync();
 
-    private void Logout()
-    {
-        try
-        {
-            Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
-        }
-        catch (Exception ex)
-        {
-            NotifyAndLogError("Failed to logout.", ex);
-        }
+        _initials = CurrentUser?.GetInitials();
     }
 }

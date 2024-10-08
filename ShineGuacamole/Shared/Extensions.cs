@@ -56,6 +56,29 @@ namespace ShineGuacamole.Shared
         }
 
         /// <summary>
+        /// Get the user initials.
+        /// </summary>
+        /// <param name="principal">The claims principal.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static string GetInitials(this ClaimsPrincipal principal)
+        {
+            var name = GetUserName(principal);
+            var nameSplit = name.Split(null);
+
+            if (nameSplit.Length == 0)
+                return name;
+
+            string initials = string.Empty;
+            foreach (var split in nameSplit)
+            {
+                initials += split.ToUpper().FirstOrDefault();
+            }
+
+            return initials;
+        }
+
+        /// <summary>
         /// Convert to base64 image string.
         /// </summary>
         /// <param name="imageBytes"></param>

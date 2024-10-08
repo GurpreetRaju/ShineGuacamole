@@ -25,14 +25,16 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <HeaderAndNavigation />
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+<CascadingValue Value="CurrentUser">
+    <MudLayout>
+        <HeaderAndNavigation />
+        <MudMainContent>
+            <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+</CascadingValue>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

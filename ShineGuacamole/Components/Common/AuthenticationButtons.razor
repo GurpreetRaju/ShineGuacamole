@@ -1,0 +1,71 @@
+﻿<!--
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+-->
+
+@inherits ShineComponentBase<AuthenticationButtons>
+
+@inject NavigationManager Navigation
+
+@if (CurrentUser?.Identity?.IsAuthenticated == true)
+{
+    <MudIconButton Icon="@MaterialDesignIcons.Normal.Logout"
+                   Variant="Variant.Text" Size="Size.Small"
+                   title="Logout" Color="Color.Error"
+                   Class="mx-1" DropShadow="false" OnClick="Logout">
+    </MudIconButton>
+}
+else
+{
+    <MudIconButton Icon="@MaterialDesignIcons.Normal.Login"
+                   Variant="Variant.Text" Size="Size.Small"
+                   title="Login" Color="Color.Success"
+                   Class="mx-1" DropShadow="false" OnClick="Login">
+    </MudIconButton>
+}
+
+@code {
+
+    /// <summary>
+    /// Redirect to log in url.
+    /// </summary>
+    private void Login()
+    {
+        try
+        {
+            Navigation.NavigateTo("MicrosoftIdentity/Account/SignIn", true);
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError("Failed to login.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Redirect to log out url.
+    /// </summary>
+    private void Logout()
+    {
+        try
+        {
+            Navigation.NavigateTo("MicrosoftIdentity/Account/SignOut", true);
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError("Failed to logout.", ex);
+        }
+    }
+}

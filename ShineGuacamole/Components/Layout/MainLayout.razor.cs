@@ -17,8 +17,10 @@
 #endregion
 
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using ShineGuacamole.Services;
+using System.Security.Claims;
 
 namespace ShineGuacamole.Components.Layout
 {
@@ -35,12 +37,46 @@ namespace ShineGuacamole.Components.Layout
         [Inject]
         private UserPreferences UserPreferences { get; set; }
 
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        [Inject]
+        private ILogger<MainLayout> Logger { get; set; }
+
+        /// <summary>
+        /// The authentication state.
+        /// </summary>
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationState { get; set; }
+
+        /// <summary>
+        /// Current user.
+        /// </summary>
+        private ClaimsPrincipal CurrentUser { get; set; }
+
         /// <inheritdoc/>
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             UserPreferences.StateHasChanged += HandleStateHasChanged;
+        }
+
+        /// <inheritdoc/>
+        protected override async Task OnInitializedAsync()
+        {
+            try
+            {
+                await base.OnInitializedAsync();
+
+                var state = await AuthenticationState;
+
+                CurrentUser = state.User;
+            }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex, "Failed to initialize.");
+            }
         }
 
         /// <summary>

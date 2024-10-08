@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
+using ShineGuacamole.Shared.Enums;
 using ShineGuacamole.Shared.Models;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
@@ -30,10 +31,11 @@ namespace ShineGuacamole.Components.Dialogs
     /// </summary>
     public partial class EditConnectionDialog
     {
-        private MudForm form;
+        private MudForm _form;
         private ConnectionInfo _connection;
         private ConnectionProperties _properties;
         private bool _isLoading = true;
+        private bool _isValid;
 
         /// <summary>
         /// The connection service.
@@ -46,6 +48,12 @@ namespace ShineGuacamole.Components.Dialogs
         /// </summary>
         [Parameter]
         public string ConnectionId { get; set; }
+
+        /// <summary>
+        /// View mode.
+        /// </summary>
+        [Parameter]
+        public ViewMode Mode { get; set; } 
 
         /// <summary>
         /// The dialog instance.
@@ -124,6 +132,12 @@ namespace ShineGuacamole.Components.Dialogs
         { 
             try
             {
+                await _form.Validate();
+                if (!_form.IsValid) 
+                {
+                    return;
+                }
+
                 await ConnectionService.SaveConnection(UserId, _connection, _properties);
 
                 Snackbar.Add("Connection saved succesfully.");

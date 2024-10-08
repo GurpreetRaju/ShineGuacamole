@@ -43,6 +43,12 @@ namespace ShineGuacamole.Shared.Models
         public string Hostname { get; set; }
 
         /// <summary>
+        /// The Hostname.
+        /// </summary>
+        [JsonProperty("port")]
+        public int Port { get; set; }
+
+        /// <summary>
         /// The username.
         /// </summary>
         [JsonProperty("username")]

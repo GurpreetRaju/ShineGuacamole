@@ -24,7 +24,7 @@
 
 @inherits ShineComponentBase<RemoteConnection>
 
-<PageView PageTitle="Remote Connection" PageActions="@PageActions" Loading="!IsAuthLoaded">
+<PageView PageTitle="Remote Connection" PageActions="@PageActions" Loading="!_initialized">
     @if (string.IsNullOrEmpty(ConnectionId))
     {
         <MudAlert>Something went wrong! Please go to the <MudLink Href="@AppRoutes.Connections">@nameof(AppRoutes.Connections)</MudLink> page and select a connection.</MudAlert>

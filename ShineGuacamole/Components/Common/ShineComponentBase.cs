@@ -42,15 +42,10 @@ namespace ShineGuacamole.Components.Common
         protected ISnackbar Snackbar { get; set; }
 
         /// <summary>
-        /// The authentication state.
-        /// </summary>
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationState { get; set; }
-
-        /// <summary>
         /// The current user.
         /// </summary>
-        protected ClaimsPrincipal CurrentUser { get; set; }
+        [CascadingParameter]
+        public ClaimsPrincipal CurrentUser { get; set; }
 
         /// <summary>
         /// The current user identifier.
@@ -61,32 +56,6 @@ namespace ShineGuacamole.Components.Common
         /// The current user name.
         /// </summary>
         protected string UserName => CurrentUser?.GetUserName();
-
-        /// <summary>
-        /// Whether the auth state is loaded.
-        /// </summary>
-        protected bool IsAuthLoaded { get; private set; }
-
-        /// <inheritdoc/>
-        protected override async Task OnInitializedAsync()
-        {
-            try
-            {
-                await base.OnInitializedAsync();
-
-                var state = await AuthenticationState;
-
-                CurrentUser = state.User;
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Failed to initialize. {ex}");
-            }
-            finally
-            {
-                IsAuthLoaded = true;
-            }
-        }
 
         /// <summary>
         /// Notify the message and log the error with exception.

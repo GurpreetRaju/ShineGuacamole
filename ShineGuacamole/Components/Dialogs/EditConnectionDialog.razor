@@ -33,7 +33,7 @@
         }
         else if (_connection != null && _properties != null)
         {
-            <MudForm @ref="form">                
+            <MudForm @ref="_form" @bind-IsValid="_isValid" ReadOnly="Mode == Shared.Enums.ViewMode.ReadOnly">
                 <MudGrid>
                     <MudItem sm="6" xs="12">
                         <MudPaper Outlined="true" Class="pa-4 mud-height-full">
@@ -77,6 +77,11 @@
                                             Margin="Margin.Dense"
                                             @bind-Value="_properties.Hostname"
                                             Required="true" RequiredError="Hostname is required!" />
+                            <MudTextField T="int" Label="Port"
+                                            Variant="Variant.Outlined"
+                                            Margin="Margin.Dense"
+                                            @bind-Value="_properties.Port"
+                                            Required="true" RequiredError="Port is required!" />
                             <MudTextField T="string" Label="Username"
                                             Variant="Variant.Outlined"
                                             Margin="Margin.Dense"
@@ -104,10 +109,25 @@
     </DialogContent>
     <DialogActions>
         <MudStack Row="true">
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" DropShadow="false" OnClick="@(() => Dialog.Cancel())">Close</MudButton>
-            <MudSpacer />
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())">Reset</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => SaveConnection())">Save</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                       DropShadow="false" 
+                       OnClick="@(() => Dialog.Cancel())">
+                Close
+            </MudButton>
+            @if (Mode != Shared.Enums.ViewMode.ReadOnly)
+            {
+                <MudSpacer />
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+                           DropShadow="false"
+                           OnClick="@(() => _form.ResetAsync())">
+                    Reset
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                           DropShadow="false" Disabled="@(!_isValid)"
+                           OnClick="@(() => SaveConnection())">
+                    Save
+                </MudButton>
+            }
         </MudStack>
     </DialogActions>
 </MudDialog>

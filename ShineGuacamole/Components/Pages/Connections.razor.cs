@@ -22,6 +22,7 @@ using MudBlazor;
 using ShineGuacamole.Components.Dialogs;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared;
+using ShineGuacamole.Shared.Enums;
 using System.Runtime.CompilerServices;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
@@ -46,12 +47,6 @@ namespace ShineGuacamole.Components.Pages
         /// </summary>
         [Inject]
         private IConnectionManagerService ConnectionService { get; set; }
-
-        /// <summary>
-        /// Reference to the snackbar.
-        /// </summary>
-        [Inject]
-        private ISnackbar Snackbar { get; set; }
 
         /// <summary>
         /// Reference to the Navigation Manager.
@@ -125,7 +120,7 @@ namespace ShineGuacamole.Components.Pages
             {
                 if (connectionInfo == null) return;
 
-                await EditConnection(connectionInfo);
+                await EditConnection(connectionInfo, ViewMode.ReadOnly);
             }
             catch (Exception ex)
             {
@@ -162,7 +157,11 @@ namespace ShineGuacamole.Components.Pages
         {
             try
             {
-                var instance = await DialogService.ShowAsync<EditConnectionDialog>(null, s_options);
+                var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,                    
+                    new DialogParameters<EditConnectionDialog>
+                    {
+                        {x => x.Mode, ViewMode.New}
+                    }, s_options);
 
                 await instance.Result;
             }
@@ -178,7 +177,7 @@ namespace ShineGuacamole.Components.Pages
         /// </summary>
         /// <param name="connection"></param>
         /// <returns></returns>
-        private async Task EditConnection(ConnectionInfo connection)
+        private async Task EditConnection(ConnectionInfo connection, ViewMode mode)
         {
             try
             {
@@ -187,7 +186,8 @@ namespace ShineGuacamole.Components.Pages
                 var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,
                     new DialogParameters<EditConnectionDialog>
                     {
-                        { x => x.ConnectionId, connection.Id }
+                        { x => x.ConnectionId, connection.Id },
+                        { x => x.Mode, mode },
                     }, 
                     s_options);
 

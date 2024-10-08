@@ -64,6 +64,8 @@ namespace ShineGuacamole.Components.Pages
                     _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/rdp-connection.js");
 
                     _initialized = true;
+
+                    await InvokeAsync(StateHasChanged);
                 }
             }
             catch (Exception ex)

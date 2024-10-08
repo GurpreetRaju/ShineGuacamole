@@ -46,7 +46,7 @@
                         <MudPaper Class="connection-tile">
                             <MudIconButton Variant="Variant.Text" Class="conn-options-button"
                                            Icon="@Icons.Material.Filled.Edit"
-                                           OnClick="@(() => EditConnection(connection))"
+                                           OnClick="@(() => EditConnection(connection, Shared.Enums.ViewMode.Edit))"
                                            Size="Size.Small">
                             </MudIconButton>
                             <MudStack Class="py-3" AlignItems="AlignItems.Center">
