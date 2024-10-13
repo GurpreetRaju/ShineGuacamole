@@ -21,11 +21,12 @@
 
 @inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="@UserPreferences.DarkMode" Theme="_theme" />
-<MudDialogProvider />
-<MudSnackbarProvider />
-
 <CascadingValue Value="CurrentUser">
+
+    <MudThemeProvider @bind-IsDarkMode="@UserPreferences.DarkMode" Theme="_theme" />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
     <MudLayout>
         <HeaderAndNavigation />
         <MudMainContent>

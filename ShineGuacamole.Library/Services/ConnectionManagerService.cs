@@ -21,6 +21,9 @@ using ShineGuacamole.Shared.Models;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Library.DataAccess;
 using Newtonsoft.Json;
+using ShineGuacamole.Library.Services.Interfaces;
+using ShineGuacamole.Library.Models;
+using ShineGuacamole.Models;
 
 namespace ShineGuacamole.Services
 {
@@ -31,15 +34,18 @@ namespace ShineGuacamole.Services
     {
         private readonly ILogger _logger;
         private readonly IConnectionsDataAccess _connectionsDataAccess;
+        private readonly INotificationService _notificationService;
 
         /// <summary>
         /// Initializes the connection manager service.
         /// </summary>
-        public ConnectionManagerService(ILogger<ConnectionManagerService> logger,
-            IConnectionsDataAccess connectionsDataAccess)
+        public ConnectionManagerService(IConnectionsDataAccess connectionsDataAccess,
+            INotificationService notificationService,
+            ILogger<ConnectionManagerService> logger)
         {
             _logger = logger;
             _connectionsDataAccess = connectionsDataAccess;
+            _notificationService = notificationService;
         }
 
         /// <inheritdoc/>
@@ -88,6 +94,13 @@ namespace ShineGuacamole.Services
             _logger.LogInformation(nameof(SaveConnection) + $" - Called.");
 
             await _connectionsDataAccess.SaveConnection(userId, connection, properties);
+
+            _notificationService.SendNotification(new EntityUpdate<ConnectionInfo> 
+            { 
+                Entity = connection, 
+                Type = NotificationType.ConnectionUpdate,
+                UserId = userId
+            });
         }
 
         /// <inheritdoc/>

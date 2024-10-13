@@ -26,6 +26,8 @@ using Microsoft.Identity.Web.UI;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using Microsoft.AspNetCore.Http.Features;
+using ShineGuacamole.Library.Services;
+using ShineGuacamole.Library.Services.Interfaces;
 
 namespace ShineGuacamole
 {
@@ -91,6 +93,10 @@ namespace ShineGuacamole
 
                     b.RegisterType<UserPreferences>()
                         .AsSelf()
+                        .InstancePerLifetimeScope();
+
+                    b.RegisterType<NotificationService>()
+                        .As<INotificationService>()
                         .InstancePerLifetimeScope();
                 });
         }

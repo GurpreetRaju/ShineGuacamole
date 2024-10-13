@@ -20,10 +20,11 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
 using ShineGuacamole.Components.Dialogs;
+using ShineGuacamole.Library.Models;
+using ShineGuacamole.Library.Services.Interfaces;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared;
 using ShineGuacamole.Shared.Enums;
-using System.Runtime.CompilerServices;
 using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Pages
@@ -31,9 +32,9 @@ namespace ShineGuacamole.Components.Pages
     /// <summary>
     /// Code behind for <see cref="Connections"/>.
     /// </summary>
-    public partial class Connections
+    public partial class Connections : IDisposable
     {
-        private IEnumerable<ConnectionInfo> _connections;
+        private List<ConnectionInfo> _connections;
         private bool _isLoading = true;
         private static DialogOptions s_options = new DialogOptions
         {
@@ -47,6 +48,12 @@ namespace ShineGuacamole.Components.Pages
         /// </summary>
         [Inject]
         private IConnectionManagerService ConnectionService { get; set; }
+
+        /// <summary>
+        /// Reference to notification service.
+        /// </summary>
+        [Inject]
+        private INotificationService NotificationService { get; set; }
 
         /// <summary>
         /// Reference to the Navigation Manager.
@@ -76,7 +83,11 @@ namespace ShineGuacamole.Components.Pages
             try
             {
                 await base.OnInitializedAsync();
-                _connections = await ConnectionService.GetConnections(UserId);
+
+                var connections = await ConnectionService.GetConnections(UserId);
+                _connections = connections?.ToList() ?? new List<ConnectionInfo>();
+
+                NotificationService.Register(NotificationType.ConnectionUpdate, HandleConnectionChange);
             }
             catch (Exception ex)
             {
@@ -87,6 +98,14 @@ namespace ShineGuacamole.Components.Pages
             {
                 _isLoading = false;
             }
+        }
+
+        /// <summary>
+        /// Dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            NotificationService.Unregister(NotificationType.ConnectionUpdate, HandleConnectionChange);
         }
 
         /// <summary>
@@ -197,6 +216,31 @@ namespace ShineGuacamole.Components.Pages
             {
                 Logger.LogError($"Failed to edit connection. {ex}");
                 Snackbar.Add("Failed to edit connection.");
+            }
+        }
+
+        /// <summary>
+        /// Handle the connection changes.
+        /// </summary>
+        /// <param name="notification">Connection change notification.</param>
+        private void HandleConnectionChange(INotificationItem notification)
+        {
+            try
+            {
+                if (notification is EntityUpdate<ConnectionInfo> update)
+                {
+                    int index = _connections.FindIndex(c => c.Id == update.Entity.Id);
+                    if (index > -1)
+                    {
+                        _connections[index] = update.Entity;
+
+                        InvokeAsync(StateHasChanged);
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                Logger.LogError(ex, "Failed to handle the connection update.");
             }
         }
     }
