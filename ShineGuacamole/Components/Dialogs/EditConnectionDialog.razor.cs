@@ -83,9 +83,7 @@ namespace ShineGuacamole.Components.Dialogs
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to get connection details for {ConnectionId}. {ex}");
-
-                Snackbar.Add("Failed to get the connection details.");
+                NotifyAndLogError($"Failed to get connection details for {ConnectionId}.", ex);
             }
             finally
             {

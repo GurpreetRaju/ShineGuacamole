@@ -34,6 +34,8 @@ namespace ShineGuacamole.Components.Pages
     /// </summary>
     public partial class Connections : IDisposable
     {
+        #region Fields
+
         private List<ConnectionInfo> _connections;
         private bool _isLoading = true;
         private static DialogOptions s_options = new DialogOptions
@@ -42,6 +44,11 @@ namespace ShineGuacamole.Components.Pages
             CloseButton = true,
             CloseOnEscapeKey = true
         };
+
+        #endregion
+
+
+        #region Properties
 
         /// <summary>
         /// Reference to connection service.
@@ -74,6 +81,11 @@ namespace ShineGuacamole.Components.Pages
             new ActionConfig { Icon = Icons.Material.Filled.Add, OnClick = () => _ = CreateNewConnection(), Text = "New connection" }
         ];
 
+        #endregion
+
+
+        #region Overrides and Public Methods
+
         /// <summary>
         /// Called when this component is initialized.
         /// </summary>
@@ -91,8 +103,7 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to initialize. {ex}");
-                Snackbar.Add(ex.Message, Severity.Error);
+                NotifyAndLogError("Failed to initialize.", ex);
             }
             finally
             {
@@ -107,6 +118,11 @@ namespace ShineGuacamole.Components.Pages
         {
             NotificationService.Unregister(NotificationType.ConnectionUpdate, HandleConnectionChange);
         }
+
+        #endregion
+
+
+        #region Private Methods
 
         /// <summary>
         /// Connect.
@@ -124,8 +140,7 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to connect. Connection {connectionInfo?.Id}. {ex}");
-                Snackbar.Add("Failed to connect.");
+                NotifyAndLogError($"Failed to connect to Connection {connectionInfo?.Id}.", ex);
             }
         }
 
@@ -135,17 +150,9 @@ namespace ShineGuacamole.Components.Pages
         /// <param name="connectionInfo">The connection info.</param>
         private async Task Details(ConnectionInfo connectionInfo)
         {
-            try
-            {
-                if (connectionInfo == null) return;
+            if (connectionInfo == null) return;
 
-                await EditConnection(connectionInfo, ViewMode.ReadOnly);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError($"Failed to connect. Connection {connectionInfo?.Id}. {ex}");
-                Snackbar.Add("Failed to connect.");
-            }
+            await EditConnection(connectionInfo, ViewMode.ReadOnly);
         }
 
         /// <summary>
@@ -162,8 +169,7 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to parse image data. {ex}");
-                Snackbar.Add("Failed to parse image data.");
+                NotifyAndLogError("Failed to parse image data.", ex);
             }
             return "images/rdp-image.png";
         }
@@ -186,8 +192,7 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to create new connection. {ex}");   
-                Snackbar.Add("Failed to create new connection.");
+                NotifyAndLogError("Failed to create new connection.", ex);
             }
         }
 
@@ -214,8 +219,7 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Failed to edit connection. {ex}");
-                Snackbar.Add("Failed to edit connection.");
+                NotifyAndLogError($"Failed to {(mode == ViewMode.ReadOnly ? "view" : "edit")} connection", ex);
             }
         }
 
@@ -240,8 +244,10 @@ namespace ShineGuacamole.Components.Pages
             }
             catch (Exception ex) 
             {
-                Logger.LogError(ex, "Failed to handle the connection update.");
+                NotifyAndLogError("Failed to handle the connection update.", ex);
             }
         }
+
+        #endregion
     }
 }

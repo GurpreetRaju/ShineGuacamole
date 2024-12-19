@@ -63,7 +63,7 @@ namespace ShineGuacamole.Components.Common
         /// <param name="ex">The exception.</param>
         protected virtual void NotifyAndLogError(string message, Exception ex)
         {
-            Logger.LogError($"{message} {ex}");
+            Logger.LogError(ex, message);
 
             Snackbar.Add(message, Severity.Error);
         }

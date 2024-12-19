@@ -32,9 +32,16 @@ namespace ShineGuacamole.Services
     /// </summary>
     public class ConnectionManagerService : IConnectionManagerService
     {
+        #region Fields
+
         private readonly ILogger _logger;
         private readonly IConnectionsDataAccess _connectionsDataAccess;
         private readonly INotificationService _notificationService;
+
+        #endregion
+
+
+        #region Constructor
 
         /// <summary>
         /// Initializes the connection manager service.
@@ -47,6 +54,11 @@ namespace ShineGuacamole.Services
             _connectionsDataAccess = connectionsDataAccess;
             _notificationService = notificationService;
         }
+
+        #endregion
+
+
+        #region Public Methods
 
         /// <inheritdoc/>
         public async Task<Dictionary<string, string>> GetConnectionConfiguration(string connectionId)
@@ -130,5 +142,7 @@ namespace ShineGuacamole.Services
 
             return (result.Info, properties);
         }
+
+        #endregion
     }
 }

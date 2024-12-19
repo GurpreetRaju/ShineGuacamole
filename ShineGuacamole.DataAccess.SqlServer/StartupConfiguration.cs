@@ -1,5 +1,4 @@
-﻿
-#region Copyright
+﻿#region Copyright
 //
 // Copyright 2024 Gurpreet Raju
 //

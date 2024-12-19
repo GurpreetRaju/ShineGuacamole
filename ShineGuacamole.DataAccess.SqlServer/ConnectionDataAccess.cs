@@ -30,8 +30,15 @@ namespace ShineGuacamole.DataAccess.SqlServer
     /// </summary>
     public class ConnectionDataAccess : IConnectionsDataAccess
     {
+        #region Fields
+
         private readonly ShineGuacContext _context;
         private readonly ILogger<ConnectionDataAccess> _logger;
+
+        #endregion
+
+
+        #region Constructor
 
         /// <summary>
         /// Initialize the connection data access.
@@ -43,6 +50,11 @@ namespace ShineGuacamole.DataAccess.SqlServer
             _context = context;
             _logger = logger;
         }
+
+        #endregion
+
+
+        #region Public Methods
 
         /// <inheritdoc/>
         public async Task<ConnectionInfo> GetConnectionInfo(string connectionId)
@@ -90,7 +102,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
             _logger.LogDebug($"Get connections. User Id: {userId}");
 
             return await _context.Connections.AsQueryable()
-                .Where(c => c.UserId == userId)
+                .Where(c => c.Owner == userId)
                 .Select(c => ToConnectionInfo(c)).ToListAsync();
         }
 
@@ -112,7 +124,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
                         Name = connection.Name,
                         Image = connection.Image,
                         Type = connection.Type.ToString(),
-                        UserId = userId,
+                        Owner = userId,
                         Properties = json
                     });
                 }
@@ -124,7 +136,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
                     dbConnection.Name = connection.Name;
                     dbConnection.Image = connection.Image;
                     dbConnection.Type = connection.Type.ToString();
-                    dbConnection.UserId = userId;
+                    dbConnection.Owner = userId;
                     dbConnection.Properties = json;
                 }
                 
@@ -159,6 +171,11 @@ namespace ShineGuacamole.DataAccess.SqlServer
             }
         }
 
+        #endregion
+
+
+        #region Private Methods
+
         /// <summary>
         /// Gets the connection with given connection id.
         /// </summary>
@@ -187,5 +204,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
                 Type = Enum.Parse<ConnectionType>(connection.Type)
             };
         }
+
+        #endregion
     }
 }
