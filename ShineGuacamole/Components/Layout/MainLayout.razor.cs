@@ -29,7 +29,7 @@ namespace ShineGuacamole.Components.Layout
     /// </summary>
     public partial class MainLayout : IDisposable
     {
-        private MudTheme _theme = new MudTheme();
+        private MudTheme _theme = new ShineTheme();
 
         /// <summary>
         /// The user preferences.
