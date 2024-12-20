@@ -16,12 +16,15 @@
 // 
 #endregion
 
+using Microsoft.AspNetCore.WebUtilities;
+using ShineGuacamole.Shared.Enums;
+
 namespace ShineGuacamole.Shared
 {
     /// <summary>
     /// Manages the app routes.
     /// </summary>
-    public class AppRoutes
+    public static class AppRoutes
     {
         /// <summary>
         /// Connections page.
@@ -29,14 +32,21 @@ namespace ShineGuacamole.Shared
         public const string Connections = "/connections";
 
         /// <summary>
-        /// Remote Connection page.
+        /// Remote Session page.
         /// </summary>
-        public const string RemoteConnection = "/remote-connection";
+        public const string RemoteSession = "/remote-session";
 
         /// <summary>
-        /// New Connection page.
+        /// Connection page route.
         /// </summary>
-        public const string NewConnection = "/connection";
+        public const string Connection = "/connection/{Mode}";
 
+        /// <summary>
+        /// Connection page route format.
+        /// </summary>
+        public static string GetConnectionUrl(ViewMode mode)
+        {
+            return string.Format("/connection/{0}", mode.ToString().ToLowerInvariant());
+        }
     }
 }

@@ -24,9 +24,9 @@ using ShineGuacamole.Shared;
 namespace ShineGuacamole.Components.Pages
 {
     /// <summary>
-    /// Code behind for <see cref="RemoteConnection"/>.
+    /// Code behind for <see cref="RemoteSessionView"/>.
     /// </summary>
-    public partial class RemoteConnection : IAsyncDisposable
+    public partial class RemoteSessionView : IAsyncDisposable
     {
         private IJSObjectReference _module;
         private Guid _id = new Guid();

@@ -6,16 +6,16 @@
     public enum ViewMode
     {
         /// <summary>
+        /// New
+        /// </summary>
+        New,
+        /// <summary>
         /// Read only.
         /// </summary>
-        ReadOnly,
+        View,
         /// <summary>
         /// Edit.
         /// </summary>
-        Edit,
-        /// <summary>
-        /// New
-        /// </summary>
-        New
+        Edit
     }
 }

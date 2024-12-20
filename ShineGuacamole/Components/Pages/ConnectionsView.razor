@@ -22,9 +22,9 @@
 
 @attribute [Route(AppRoutes.Connections)]
 
-@inherits ShineComponentBase<Connections>
+@inherits ShineComponentBase<ConnectionsView>
 
-<PageView PageTitle="Connections" PageActions="PageActions">
+<PageView PageTitle="Connections View">
     @if (_isLoading)
     {
         <LoadingComponent />
@@ -40,7 +40,7 @@
                 @foreach (var connection in _connections)
                 {
                     <MudItem xs="3">
-                        <ConnectionView Connection="connection" />
+                        <RemoteConnection Connection="connection" />
                     </MudItem>
                 }
             </MudGrid>

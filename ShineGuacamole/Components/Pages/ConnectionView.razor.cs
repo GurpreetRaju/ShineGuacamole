@@ -16,25 +16,27 @@
 // 
 #endregion
 
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared.Enums;
 using ShineGuacamole.Shared.Models;
+using ShineGuacamole.Shared;
 
-namespace ShineGuacamole.Components.Dialogs
+namespace ShineGuacamole.Components.Pages
 {
     /// <summary>
-    /// Add connection.
+    /// The connection view.
     /// </summary>
-    public partial class EditConnectionDialog
+    public partial class ConnectionView
     {
         private MudForm _form;
         private RemoteConnectionInfo _connection;
         private ConnectionProperties _properties;
         private bool _isLoading = true;
         private bool _isValid;
+        private ViewMode _mode = ViewMode.New;
 
         /// <summary>
         /// The connection service.
@@ -45,39 +47,48 @@ namespace ShineGuacamole.Components.Dialogs
         /// <summary>
         /// The connection id.
         /// </summary>
-        [Parameter]
+        [SupplyParameterFromQuery]
         public string ConnectionId { get; set; }
 
         /// <summary>
         /// View mode.
         /// </summary>
         [Parameter]
-        public ViewMode Mode { get; set; } 
+        public string Mode { get; set; }
 
         /// <summary>
-        /// The dialog instance.
+        /// Whether user can view the connection.
         /// </summary>
-        [CascadingParameter]
-        public MudDialogInstance Dialog { get; set; }
+        private bool CanView => _mode == ViewMode.New || CurrentUser?.Is(_connection?.Owner) == true;
+
+        /// <summary>
+        /// Can edit.
+        /// </summary>
+        private bool CanEdit => _mode != ViewMode.View;
 
         /// <inheritdoc/>
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnParametersSetAsync()
         {
             try
             {
-                await base.OnInitializedAsync();
+                await base.OnParametersSetAsync();
 
-                if (string.IsNullOrEmpty(ConnectionId))
+                if (!string.IsNullOrEmpty(Mode) && Enum.TryParse(Mode, true, out ViewMode mode))
                 {
-                    _connection = new RemoteConnectionInfo();
-                    _properties = new ConnectionProperties();
+                    _mode = mode;
                 }
-                else
-                {
-                    var result = await ConnectionService.GetConnection(ConnectionId);
 
-                    _connection = result.Connection;
-                    _properties = result.Properties as ConnectionProperties;
+                if (_connection?.Id != ConnectionId)
+                {
+                    if (_mode == ViewMode.New)
+                    {
+                        _connection = new RemoteConnectionInfo();
+                        _properties = new ConnectionProperties();
+                    }
+                    else
+                    {
+                        await RefreshData();
+                    }
                 }
             }
             catch (Exception ex)
@@ -87,6 +98,28 @@ namespace ShineGuacamole.Components.Dialogs
             finally
             {
                 _isLoading = false;
+            }
+        }
+
+        /// <summary>
+        /// Refresh the data.
+        /// </summary>
+        private async Task RefreshData()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(ConnectionId)) return;
+
+                var result = await ConnectionService.GetConnection(ConnectionId);
+
+                _connection = result.Connection;
+                _properties = result.Properties as ConnectionProperties;
+
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (Exception ex)
+            {
+                NotifyAndLogError("Failed to load the connection details.", ex);
             }
         }
 
@@ -104,7 +137,7 @@ namespace ShineGuacamole.Components.Dialogs
                 MemoryStream stream = new MemoryStream();
                 await file.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024).CopyToAsync(stream);
                 byte[] imageBytes = stream.ToArray();
-                
+
                 _connection.Image = imageBytes;
             }
             catch (Exception ex)
@@ -126,11 +159,11 @@ namespace ShineGuacamole.Components.Dialogs
         /// </summary>
         /// <returns></returns>
         private async Task SaveConnection()
-        { 
+        {
             try
             {
                 await _form.Validate();
-                if (!_form.IsValid) 
+                if (!_form.IsValid)
                 {
                     return;
                 }
@@ -138,8 +171,6 @@ namespace ShineGuacamole.Components.Dialogs
                 await ConnectionService.SaveConnection(UserId, _connection, _properties);
 
                 Snackbar.Add("Connection saved succesfully.");
-
-                Dialog.Close();
             }
             catch (Exception ex)
             {

@@ -17,22 +17,17 @@
 #endregion
 
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.WebUtilities;
-using MudBlazor;
-using ShineGuacamole.Components.Dialogs;
 using ShineGuacamole.Library.Models;
 using ShineGuacamole.Library.Services.Interfaces;
 using ShineGuacamole.Services.Interfaces;
-using ShineGuacamole.Shared;
-using ShineGuacamole.Shared.Enums;
-using RemoteConnectionInfo = ShineGuacamole.Shared.Models.RemoteConnectionInfo;
+using ShineGuacamole.Shared.Models;
 
 namespace ShineGuacamole.Components.Pages
 {
     /// <summary>
-    /// Code behind for <see cref="Connections"/>.
+    /// Code behind for <see cref="ConnectionsView"/>.
     /// </summary>
-    public partial class Connections : IDisposable
+    public partial class ConnectionsView : IDisposable
     {
         #region Fields
 
@@ -61,19 +56,6 @@ namespace ShineGuacamole.Components.Pages
         /// </summary>
         [Inject]
         private NavigationManager Navigation { get; set; }
-        
-        /// <summary>
-        /// Reference to the Dialog service.
-        /// </summary>
-        [Inject]
-        private IDialogService DialogService { get; set; }
-
-        /// <summary>
-        /// Page actions.
-        /// </summary>
-        protected IEnumerable<ActionConfig> PageActions => [
-            new ActionConfig { Icon = Icons.Material.Filled.Add, OnClick = () => _ = CreateNewConnection(), Text = "New connection" }
-        ];
 
         #endregion
 
@@ -117,28 +99,6 @@ namespace ShineGuacamole.Components.Pages
 
 
         #region Private Methods
-
-        /// <summary>
-        /// Opens the create new connection dialog.
-        /// </summary>
-        /// <returns></returns>
-        private async Task CreateNewConnection()
-        {
-            try
-            {
-                var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,                    
-                    new DialogParameters<EditConnectionDialog>
-                    {
-                        {x => x.Mode, ViewMode.New}
-                    }, Extensions.DialogOptions);
-
-                await instance.Result;
-            }
-            catch (Exception ex)
-            {
-                NotifyAndLogError("Failed to create new connection.", ex);
-            }
-        }
 
         /// <summary>
         /// Handle the connection changes.

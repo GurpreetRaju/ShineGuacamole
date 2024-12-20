@@ -49,13 +49,13 @@ namespace ShineGuacamole.Services
         /// </summary>
         public void ToggleThemeMode()
         {
-            _logger.LogInformation($"ID: {_id} - Old Dark Mode: {DarkMode}");
+            _logger.LogInformation($"ID: {_id} - Old Dark _mode: {DarkMode}");
 
             DarkMode = !DarkMode;
 
             StateHasChanged?.Invoke(this, EventArgs.Empty);
 
-            _logger.LogInformation($"ID: {_id} - New Dark Mode: {DarkMode}");
+            _logger.LogInformation($"ID: {_id} - New Dark _mode: {DarkMode}");
         }
     }
 }

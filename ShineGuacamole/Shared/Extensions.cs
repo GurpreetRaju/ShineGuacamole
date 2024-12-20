@@ -37,6 +37,18 @@ namespace ShineGuacamole.Shared
         };
 
         /// <summary>
+        /// Determine if the user principal has the same user identifier.
+        /// </summary>
+        /// <param name="principal">The claims principal.</param>
+        /// <param name="userId">The user identifier to check against.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static bool Is(this ClaimsPrincipal principal, string userId)
+        {
+            return !string.IsNullOrEmpty(userId) && principal?.GetUserId()?.Equals(userId, StringComparison.OrdinalIgnoreCase) == true;
+        }
+
+        /// <summary>
         /// Get the user identifier.
         /// </summary>
         /// <param name="principal">The claims principal.</param>

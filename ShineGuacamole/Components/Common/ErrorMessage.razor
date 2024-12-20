@@ -17,10 +17,20 @@
 -->
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Style="@HeightStyle">
+    @if (!string.IsNullOrEmpty(Icon))
+    {
+        <MudIcon Icon="@Icon" Color="Color.Error" />
+    }
     <MudText>@Message</MudText>
 </MudStack>
 
 @code {
+
+    /// <summary>
+    /// The icon.
+    /// </summary>
+    [Parameter]
+    public string Icon { get; set; }
 
     /// <summary>
     /// The message.

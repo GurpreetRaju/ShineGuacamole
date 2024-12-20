@@ -243,6 +243,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
                 Image = connection.Image,
                 Name = connection.Name,
                 Type = Enum.Parse<ConnectionType>(connection.Type),
+                Owner = connection.Owner,
                 FavPosition = connection.FavPosition
             };
         }

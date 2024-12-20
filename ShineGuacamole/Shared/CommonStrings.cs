@@ -27,5 +27,10 @@ namespace ShineGuacamole.Shared
         /// Connection Id parameter name.
         /// </summary>
         public const string ConnectionIdParameter = "connectionId";
+
+        /// <summary>
+        /// View _mode parameter name.
+        /// </summary>
+        public const string ModeParameter = "mode";
     }
 }

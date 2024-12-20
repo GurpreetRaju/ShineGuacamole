@@ -20,7 +20,7 @@
 @using ShineGuacamole.Components.Dialogs
 @using ShineGuacamole.Shared.Enums
 
-@inherits ShineComponentBase<ConnectionView>
+@inherits ShineComponentBase<RemoteConnection>
 
 @inject IDialogService DialogService
 @inject NavigationManager Navigation
@@ -31,7 +31,7 @@
         {
             <MudIconButton Variant="Variant.Text" Class="conn-options-button align-self-end"
                            Icon="@Icons.Material.Filled.Edit"
-                           OnClick="@(() => EditConnection(Shared.Enums.ViewMode.Edit))"
+                           OnClick="@(() => NavigateToConnection(ViewMode.Edit))"
                            Size="Size.Small">
             </MudIconButton>
         }
@@ -49,14 +49,14 @@
             <MudText Align="Align.Center">@Connection.Name</MudText>
         </MudStack>
         <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" OverrideStyles="false">
-            <MudButton OnClick="@Details"
-            Variant="Variant.Filled" Size="Size.Small"
-            Color="Color.Secondary">
+            <MudButton OnClick="@(() => NavigateToConnection(ViewMode.View))"
+                       Variant="Variant.Outlined" Size="Size.Small"
+                       Color="Color.Primary">
                 Details
             </MudButton>
             <MudButton OnClick="@Connect"
-            Variant="Variant.Filled" Size="Size.Small"
-            Color="Color.Primary">
+                       Variant="Variant.Filled" Size="Size.Small"
+                       Color="Color.Primary">
                 Connect
             </MudButton>
         </MudButtonGroup>
@@ -86,7 +86,7 @@
             if (Connection == null) return;
 
             var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, Connection.Id } };
-            var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
+            var url = QueryHelpers.AddQueryString(AppRoutes.RemoteSession, parameters);
             Navigation.NavigateTo(url);
         }
         catch (Exception ex)
@@ -96,38 +96,23 @@
     }
 
     /// <summary>
-    /// Show details.
-    /// </summary>
-    private async Task Details()
-    {
-        if (Connection == null) return;
-
-        await EditConnection(ViewMode.ReadOnly);
-    }
-
-    /// <summary>
     /// Opens the edit connection dialog.
     /// </summary>
     /// <returns></returns>
-    private async Task EditConnection(ViewMode mode)
+    private void NavigateToConnection(ViewMode mode)
     {
         try
         {
             if (Connection == null) throw new ArgumentNullException(nameof(Connection));
 
-            var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,
-                new DialogParameters<EditConnectionDialog>
-                    {
-                        { x => x.ConnectionId, Connection.Id },
-                        { x => x.Mode, mode },
-                    },
-                Extensions.DialogOptions);
+            var parameters = new Dictionary<string, string>  { { CommonStrings.ConnectionIdParameter, Connection.Id } };
+            var uri = QueryHelpers.AddQueryString(AppRoutes.GetConnectionUrl(mode), parameters);
 
-            await instance.Result;
+            Navigation.NavigateTo(uri, true);
         }
         catch (Exception ex)
         {
-            NotifyAndLogError($"Failed to {(mode == ViewMode.ReadOnly ? "view" : "edit")} connection", ex);
+            NotifyAndLogError($"Failed to {(mode == ViewMode.View ? "view" : "edit")} connection", ex);
         }
     }
 

@@ -47,6 +47,11 @@ namespace ShineGuacamole.Shared.Models
         /// The image.
         /// </summary>
         public byte[] Image {  get; set; }
+
+        /// <summary>
+        /// The connection owner.
+        /// </summary>
+        public string Owner { get; set; }
     }
 
     /// <summary>

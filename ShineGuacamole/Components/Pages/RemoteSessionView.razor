@@ -20,11 +20,11 @@
 @using ShineGuacamole.Shared
 @using ShineGuacamole.Components.Common
 
-@attribute [Route(AppRoutes.RemoteConnection)];
+@attribute [Route(AppRoutes.RemoteSession)];
 
-@inherits ShineComponentBase<RemoteConnection>
+@inherits ShineComponentBase<RemoteSessionView>
 
-<PageView PageTitle="Remote Connection" PageActions="@PageActions" Loading="!_initialized">
+<PageView PageTitle="Remote Session View" PageActions="@PageActions" Loading="!_initialized">
     @if (string.IsNullOrEmpty(ConnectionId))
     {
         <MudAlert>Something went wrong! Please go to the <MudLink Href="@AppRoutes.Connections">@nameof(AppRoutes.Connections)</MudLink> page and select a connection.</MudAlert>

@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ShineGuacamole.Shared;
 using ShineGuacamole.Services;
+using Bromix.MudBlazor.MaterialDesignIcons;
+using ShineGuacamole.Shared.Enums;
 
 namespace ShineGuacamole.Components.Common
 {
@@ -34,6 +36,7 @@ namespace ShineGuacamole.Components.Common
 
         private static IEnumerable<ActionConfig> _navItems = [
             new ActionConfig{ Href = "/", Icon = Icons.Material.Filled.Home, Text = "Home", Match = NavLinkMatch.All },
+            new ActionConfig{ Href = AppRoutes.GetConnectionUrl(ViewMode.New), Icon = MaterialDesignIcons.Normal.Plus, Text = "New Connection", Match = NavLinkMatch.Prefix },
             new ActionConfig{ Href = AppRoutes.Connections, Icon = Icons.Material.Filled.Apps, Text = "Connections", Match = NavLinkMatch.Prefix }
         ];
 
