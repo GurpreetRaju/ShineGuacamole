@@ -24,7 +24,7 @@
 
 @inherits ShineComponentBase<ConnectionView>
 
-<PageView PageTitle="Connection View">
+<PageView PageTitle="@PageTitle">
     @if (_isLoading)
     {
         <LoadingComponent />
@@ -75,51 +75,60 @@
                 <MudItem sm="6" xs="12">
                     <MudPaper Outlined="true" Class="pa-4 mud-height-full">
                         <MudTextField T="string" Label="Hostname"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        @bind-Value="_properties.Hostname"
-                        Required="true" RequiredError="Hostname is required!" />
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Hostname"
+                                      Required="true" RequiredError="Hostname is required!" />
                         <MudTextField T="int" Label="Port"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        @bind-Value="_properties.Port"
-                        Required="true" RequiredError="Port is required!" />
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Port"
+                                      Required="true" RequiredError="Port is required!" />
                         <MudTextField T="string" Label="Username"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        @bind-Value="_properties.Username"
-                        Required="true" RequiredError="Username is required!" />
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Username"
+                                      Required="true" RequiredError="Username is required!" />
                         <MudTextField T="string" Label="Password"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        @bind-Value="_properties.Password"
-                        InputType="InputType.Password" />
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.Password"
+                                      InputType="InputType.Password" />
                         <MudTextField T="string" Label="Remote App"
-                        Variant="Variant.Outlined"
-                        Margin="Margin.Dense"
-                        @bind-Value="_properties.RemoteApp"
-                        HelperText="e.g. ||wmplayer" />
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"
+                                      @bind-Value="_properties.RemoteApp"
+                                      HelperText="e.g. ||wmplayer" />
                     </MudPaper>
                 </MudItem>
             </MudGrid>
         </MudForm>
-
-        @if (CanEdit)
-        {
-            <MudStack Row="true" Class="py-3">
+        
+        <MudStack Row="true" Class="py-3">
+            @if (CanEdit)
+            {
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary"
-                           DropShadow="false"
-                           OnClick="@(() => _form.ResetAsync())">
+                            DropShadow="false"
+                            OnClick="@(() => _form.ResetAsync())">
                     Reset
                 </MudButton>
                 <MudSpacer />
                 <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                           DropShadow="false" Disabled="@(!_isValid)"
-                           OnClick="@(() => SaveConnection())">
+                            DropShadow="false" Disabled="@(!_isValid)"
+                            OnClick="@(() => SaveConnection())">
                     Save
                 </MudButton>
-            </MudStack>
-        }
+            }
+            else
+            {
+                <MudSpacer />
+                <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                           DropShadow="false" Disabled="@(string.IsNullOrEmpty(_connection?.Id))"
+                           OnClick="@Connect">
+                    Connect
+                </MudButton>
+            }
+        </MudStack>
     }
     else
     {

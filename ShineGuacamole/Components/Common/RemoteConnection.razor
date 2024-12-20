@@ -30,9 +30,9 @@
         @if (Edit)
         {
             <MudIconButton Variant="Variant.Text" Class="conn-options-button align-self-end"
-                           Icon="@Icons.Material.Filled.Edit"
-                           OnClick="@(() => NavigateToConnection(ViewMode.Edit))"
-                           Size="Size.Small">
+            Icon="@Icons.Material.Filled.Edit"
+            OnClick="@(() => NavigateToConnection(ViewMode.Edit))"
+            Size="Size.Small">
             </MudIconButton>
         }
         <MudStack Class="py-3" AlignItems="AlignItems.Center">
@@ -50,13 +50,13 @@
         </MudStack>
         <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" OverrideStyles="false">
             <MudButton OnClick="@(() => NavigateToConnection(ViewMode.View))"
-                       Variant="Variant.Outlined" Size="Size.Small"
-                       Color="Color.Primary">
+            Variant="Variant.Outlined" Size="Size.Small"
+            Color="Color.Primary">
                 Details
             </MudButton>
             <MudButton OnClick="@Connect"
-                       Variant="Variant.Filled" Size="Size.Small"
-                       Color="Color.Primary">
+            Variant="Variant.Filled" Size="Size.Small"
+            Color="Color.Primary">
                 Connect
             </MudButton>
         </MudButtonGroup>
@@ -85,9 +85,7 @@
         {
             if (Connection == null) return;
 
-            var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, Connection.Id } };
-            var url = QueryHelpers.AddQueryString(AppRoutes.RemoteSession, parameters);
-            Navigation.NavigateTo(url);
+            Navigation.ToRemoteSessionView(Connection.Id);
         }
         catch (Exception ex)
         {
@@ -96,19 +94,14 @@
     }
 
     /// <summary>
-    /// Opens the edit connection dialog.
+    /// Opens the edit connection page.
     /// </summary>
     /// <returns></returns>
     private void NavigateToConnection(ViewMode mode)
     {
         try
         {
-            if (Connection == null) throw new ArgumentNullException(nameof(Connection));
-
-            var parameters = new Dictionary<string, string>  { { CommonStrings.ConnectionIdParameter, Connection.Id } };
-            var uri = QueryHelpers.AddQueryString(AppRoutes.GetConnectionUrl(mode), parameters);
-
-            Navigation.NavigateTo(uri, true);
+            Navigation.ToConnectionView(mode, Connection?.Id);
         }
         catch (Exception ex)
         {

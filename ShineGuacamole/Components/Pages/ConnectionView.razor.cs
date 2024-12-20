@@ -23,6 +23,7 @@ using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared.Enums;
 using ShineGuacamole.Shared.Models;
 using ShineGuacamole.Shared;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ShineGuacamole.Components.Pages
 {
@@ -45,6 +46,12 @@ namespace ShineGuacamole.Components.Pages
         private IConnectionManagerService ConnectionService { get; set; }
 
         /// <summary>
+        /// The navigation manager.
+        /// </summary>
+        [Inject]
+        private NavigationManager Navigation { get; set; }
+
+        /// <summary>
         /// The connection id.
         /// </summary>
         [SupplyParameterFromQuery]
@@ -55,6 +62,11 @@ namespace ShineGuacamole.Components.Pages
         /// </summary>
         [Parameter]
         public string Mode { get; set; }
+
+        /// <summary>
+        /// The page title.
+        /// </summary>
+        private string PageTitle => $"{_mode} Connection";
 
         /// <summary>
         /// Whether user can view the connection.
@@ -78,17 +90,14 @@ namespace ShineGuacamole.Components.Pages
                     _mode = mode;
                 }
 
-                if (_connection?.Id != ConnectionId)
+                if (_mode == ViewMode.New)
                 {
-                    if (_mode == ViewMode.New)
-                    {
-                        _connection = new RemoteConnectionInfo();
-                        _properties = new ConnectionProperties();
-                    }
-                    else
-                    {
-                        await RefreshData();
-                    }
+                    _connection = new RemoteConnectionInfo();
+                    _properties = new ConnectionProperties();
+                }
+                else if (_connection?.Id != ConnectionId)
+                {   
+                    await RefreshData();
                 }
             }
             catch (Exception ex)
@@ -175,6 +184,24 @@ namespace ShineGuacamole.Components.Pages
             catch (Exception ex)
             {
                 NotifyAndLogError($"Failed to save connection details {ConnectionId}.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Connect.
+        /// </summary>
+        /// <returns></returns>
+        private void Connect()
+        {
+            try
+            {
+                if (_connection == null) return;
+
+                Navigation.ToRemoteSessionView(_connection.Id);
+            }
+            catch (Exception ex)
+            {
+                NotifyAndLogError($"Failed to connect to Connection {_connection.Id}.", ex);
             }
         }
     }
