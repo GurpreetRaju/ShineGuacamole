@@ -31,10 +31,7 @@
     }
     else if (_connections == null || !_connections.Any())
     {
-        <MudStack Class="align-content-center">
-            <MudIcon Icon="@Icon.Empty"></MudIcon>
-            <MudText Class="">There is nothing to show.</MudText>
-        </MudStack>
+        <NoItemsView />
     }
     else
     {
@@ -43,38 +40,7 @@
                 @foreach (var connection in _connections)
                 {
                     <MudItem xs="3">
-                        <MudPaper Class="connection-tile">
-                            <MudIconButton Variant="Variant.Text" Class="conn-options-button"
-                                           Icon="@Icons.Material.Filled.Edit"
-                                           OnClick="@(() => EditConnection(connection, Shared.Enums.ViewMode.Edit))"
-                                           Size="Size.Small">
-                            </MudIconButton>
-                            <MudStack Class="py-3" AlignItems="AlignItems.Center">
-                                <MudAvatar Variant="Variant.Filled" Size="Size.Large">
-                                    @if (connection.Image == null)
-                                    {
-                                        <MudIcon Icon="@Icons.Material.Filled.Computer"></MudIcon>
-                                    }
-                                    else
-                                    {
-                                        <MudImage Src="@GetImageSrc(connection.Image)" Alt="@connection.Type.ToString()" />
-                                    }
-                                </MudAvatar>
-                                <MudText Align="Align.Center">@connection.Name</MudText>
-                            </MudStack>
-                            <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" OverrideStyles="false">
-                                <MudButton OnClick="@(() => Details(connection))"
-                                           Variant="Variant.Filled" Size="Size.Small"
-                                           Color="Color.Secondary">
-                                    Details
-                                </MudButton>
-                                <MudButton OnClick="@(() => Connect(connection))"
-                                           Variant="Variant.Filled" Size="Size.Small"
-                                           Color="Color.Primary">
-                                    Connect
-                                </MudButton>
-                            </MudButtonGroup>
-                        </MudPaper>
+                        <ConnectionView Connection="connection" />
                     </MudItem>
                 }
             </MudGrid>

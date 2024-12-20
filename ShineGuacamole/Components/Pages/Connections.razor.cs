@@ -25,7 +25,7 @@ using ShineGuacamole.Library.Services.Interfaces;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared;
 using ShineGuacamole.Shared.Enums;
-using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
+using RemoteConnectionInfo = ShineGuacamole.Shared.Models.RemoteConnectionInfo;
 
 namespace ShineGuacamole.Components.Pages
 {
@@ -36,15 +36,9 @@ namespace ShineGuacamole.Components.Pages
     {
         #region Fields
 
-        private List<ConnectionInfo> _connections;
+        private List<RemoteConnectionInfo> _connections;
         private bool _isLoading = true;
-        private static DialogOptions s_options = new DialogOptions
-        {
-            BackdropClick = false,
-            CloseButton = true,
-            CloseOnEscapeKey = true
-        };
-
+        
         #endregion
 
 
@@ -97,7 +91,7 @@ namespace ShineGuacamole.Components.Pages
                 await base.OnInitializedAsync();
 
                 var connections = await ConnectionService.GetConnections(UserId);
-                _connections = connections?.ToList() ?? new List<ConnectionInfo>();
+                _connections = connections?.ToList() ?? new List<RemoteConnectionInfo>();
 
                 NotificationService.Register(NotificationType.ConnectionUpdate, HandleConnectionChange);
             }
@@ -125,56 +119,6 @@ namespace ShineGuacamole.Components.Pages
         #region Private Methods
 
         /// <summary>
-        /// Connect.
-        /// </summary>
-        /// <param name="connectionInfo">The connection info.</param>
-        private void Connect(ConnectionInfo connectionInfo)
-        {
-            try
-            {
-                if (connectionInfo == null) return;
-
-                var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, connectionInfo.Id } };
-                var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
-                Navigation.NavigateTo(url);
-            }
-            catch (Exception ex)
-            {
-                NotifyAndLogError($"Failed to connect to Connection {connectionInfo?.Id}.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Show details.
-        /// </summary>
-        /// <param name="connectionInfo">The connection info.</param>
-        private async Task Details(ConnectionInfo connectionInfo)
-        {
-            if (connectionInfo == null) return;
-
-            await EditConnection(connectionInfo, ViewMode.ReadOnly);
-        }
-
-        /// <summary>
-        /// Gets the image source from bytes data.
-        /// </summary>
-        /// <param name="imageData"></param>
-        /// <returns></returns>
-        private string GetImageSrc(byte[] imageData)
-        {
-            try 
-            {
-                var img = imageData.ToBase64Image();
-                if (img != null) return img;
-            }
-            catch (Exception ex)
-            {
-                NotifyAndLogError("Failed to parse image data.", ex);
-            }
-            return "images/rdp-image.png";
-        }
-
-        /// <summary>
         /// Opens the create new connection dialog.
         /// </summary>
         /// <returns></returns>
@@ -186,40 +130,13 @@ namespace ShineGuacamole.Components.Pages
                     new DialogParameters<EditConnectionDialog>
                     {
                         {x => x.Mode, ViewMode.New}
-                    }, s_options);
+                    }, Extensions.DialogOptions);
 
                 await instance.Result;
             }
             catch (Exception ex)
             {
                 NotifyAndLogError("Failed to create new connection.", ex);
-            }
-        }
-
-        /// <summary>
-        /// Opens the edit connection dialog.
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        private async Task EditConnection(ConnectionInfo connection, ViewMode mode)
-        {
-            try
-            {
-                if (connection == null) throw new ArgumentNullException(nameof(connection));
-
-                var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,
-                    new DialogParameters<EditConnectionDialog>
-                    {
-                        { x => x.ConnectionId, connection.Id },
-                        { x => x.Mode, mode },
-                    }, 
-                    s_options);
-
-                await instance.Result;
-            }
-            catch (Exception ex)
-            {
-                NotifyAndLogError($"Failed to {(mode == ViewMode.ReadOnly ? "view" : "edit")} connection", ex);
             }
         }
 
@@ -231,7 +148,7 @@ namespace ShineGuacamole.Components.Pages
         {
             try
             {
-                if (notification is EntityUpdate<ConnectionInfo> update)
+                if (notification is EntityUpdate<RemoteConnectionInfo> update)
                 {
                     int index = _connections.FindIndex(c => c.Id == update.Entity.Id);
                     if (index > -1)

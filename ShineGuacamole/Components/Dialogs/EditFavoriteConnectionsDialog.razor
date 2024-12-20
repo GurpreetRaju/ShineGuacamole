@@ -1,0 +1,107 @@
+﻿<!--
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+-->
+
+@using ShineGuacamole.Shared.Models
+
+@inherits ShineComponentBase<EditFavoriteConnectionsDialog>
+
+<MudDialog>
+    <TitleContent>
+        Edit Favorite Connections
+    </TitleContent>
+    <DialogContent>
+        <div class="fav-list-container">
+            @if (_isLoading)
+            {
+                <LoadingComponent />
+            }
+            else
+            {
+                <MudGrid>
+                    <MudItem sm="6" xs="12">
+                        <MudPaper Class="mud-height-full" Outlined="true">                            
+                            <MudList T="RemoteConnectionInfo" ReadOnly="true" Dense="true">
+                                <MudListSubheader>
+                                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                                        <MudText Class="text-bold">Available</MudText>
+                                    </MudStack>
+                                </MudListSubheader>
+                                @foreach (var conn in _availableConnections)
+                                {
+                                    <MudListItem Class="d-flex">
+                                        <MudStack Row="true">
+                                            <MudText>@conn.Name</MudText>
+                                            @if (!_favConnections.Any(c => c.Id == conn.Id)) 
+                                            {
+                                                <MudSpacer />
+                                                <MudIconButton Icon="@MaterialDesignIcons.Normal.Plus" Size="Size.Small"
+                                                               OnClick="() => AddToFavorite(conn)" />
+                                            }
+                                        </MudStack>
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudPaper Class="mud-height-full" Outlined="true">
+                            <MudList T="RemoteConnectionInfo" Dense="true" SelectionMode="SelectionMode.ToggleSelection"
+                                     SelectedValue="_selectedFavConnection" SelectedValueChanged="HandleSelectedConnectionChanged">
+                                <MudListSubheader>
+                                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                                        <MudText Class="text-bold">Favorite</MudText>
+                                        <MudSpacer />
+                                        <MudIconButton Icon="@MaterialDesignIcons.Normal.ChevronUp" Size="Size.Small"
+                                                       Disabled="!CanMoveUp" OnClick="() => MoveUp()" />
+                                        <MudIconButton Icon="@MaterialDesignIcons.Normal.ChevronDown" Size="Size.Small"
+                                                       Disabled="!CanMoveDown" OnClick="() => MoveDown()" />
+                                    </MudStack>
+                                </MudListSubheader>
+                                @foreach (var conn in _favConnections)
+                                {
+                                    <MudListItem Value="conn">
+                                        <MudStack Row="true">
+                                            <MudText>@conn.Name</MudText>
+                                            <MudSpacer />
+                                            <MudIconButton Icon="@MaterialDesignIcons.Normal.Close" Size="Size.Small"
+                                                           OnClick="() => RemoveFromFavorite(conn)" />
+                                        </MudStack>
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudStack Row="true">
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                       DropShadow="false"
+                       OnClick="@(() => Dialog.Cancel())">
+                Close
+            </MudButton>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       DropShadow="false" OnClick="@SaveChanges">
+                Save
+            </MudButton>            
+        </MudStack>
+    </DialogActions>
+</MudDialog>

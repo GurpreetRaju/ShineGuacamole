@@ -32,6 +32,9 @@ h1:focus {
     border-color: #929292;
 }
 
+.text-bold {
+    font-weight: bold;
+}
 
 .mud-drawer-fixed.mud-drawer-mini.mud-drawer-clipped-always {
     top: var(--mud-appbar-height);

@@ -1,0 +1,9 @@
+﻿.fav-list-container {
+    width: 768px;
+}
+
+@media (max-width: 767px) {
+    .fav-list-container {
+        width: 100%;
+    }
+}

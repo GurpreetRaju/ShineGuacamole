@@ -16,6 +16,7 @@
 // 
 #endregion
 
+using MudBlazor;
 using System.Security.Claims;
 
 namespace ShineGuacamole.Shared
@@ -25,6 +26,16 @@ namespace ShineGuacamole.Shared
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Dialog options.
+        /// </summary>
+        public static DialogOptions DialogOptions = new DialogOptions
+        {
+            BackdropClick = false,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
         /// <summary>
         /// Get the user identifier.
         /// </summary>

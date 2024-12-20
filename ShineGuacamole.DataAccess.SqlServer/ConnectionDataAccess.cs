@@ -57,7 +57,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
         #region Public Methods
 
         /// <inheritdoc/>
-        public async Task<ConnectionInfo> GetConnectionInfo(string connectionId)
+        public async Task<RemoteConnectionInfo> GetConnectionInfo(string connectionId)
         {
             _logger.LogDebug($"Get connection. Connection Id: {connectionId}");
 
@@ -84,7 +84,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task<(ConnectionInfo Info, string PropertiesJson)> GetConnectionWithProperties(string connectionId)
+        public async Task<(RemoteConnectionInfo Info, string PropertiesJson)> GetConnectionWithProperties(string connectionId)
         {
             _logger.LogDebug($"Get connection with properties. Connection Id: {connectionId}");
 
@@ -97,7 +97,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ConnectionInfo>> GetConnections(string userId)
+        public async Task<IEnumerable<RemoteConnectionInfo>> GetConnections(string userId)
         {
             _logger.LogDebug($"Get connections. User Id: {userId}");
 
@@ -107,7 +107,7 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <inheritdoc/>
-        public async Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties properties)
+        public async Task SaveConnection(string userId, RemoteConnectionInfo connection, IConnectionProperties properties)
         {
             _logger.LogDebug($"Add connection. Connection: {connection}");
 
@@ -171,6 +171,47 @@ namespace ShineGuacamole.DataAccess.SqlServer
             }
         }
 
+        /// <inheritdoc/>
+        public async Task<List<RemoteConnectionInfo>> GetFavorites(string userId)
+        {
+            _logger.LogDebug($"Get favorites. User Id: {userId}");
+
+            return await _context.Connections.AsQueryable()
+                .Where(c => c.Owner == userId && c.FavPosition.HasValue)
+                .Select(c => ToConnectionInfo(c)).ToListAsync();
+        }
+
+        /// <inheritdoc/>
+        public async Task SaveFavorites(string userId, List<RemoteConnectionInfo> connections)
+        {
+            _logger.LogDebug($"Save favorites. User Id: {userId}, Count: {connections?.Count}");
+
+            if (connections == null) throw new ArgumentNullException(nameof(connections));
+
+            var connectionsDictionary = connections.ToDictionary(s => s.Id, s => s);
+            var ids = connectionsDictionary.Keys.ToList();
+
+            var connectionsToUpdate = await _context.Connections.AsQueryable()
+                .Where(c => c.Owner == userId && (c.FavPosition.HasValue || ids.Contains(c.ConnectionId.ToString())))
+                .ToListAsync();
+
+            foreach (var connection in connectionsToUpdate)
+            {
+                if (!connectionsDictionary.TryGetValue(connection.ConnectionId.ToString(), out RemoteConnectionInfo favConnection))
+                {
+                    // Not in fav list anymore
+                    connection.FavPosition = null;
+                }
+                else if (favConnection.FavPosition != connection.FavPosition) 
+                {
+                    // favorite position changed.
+                    connection.FavPosition = favConnection.FavPosition;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion
 
 
@@ -190,18 +231,19 @@ namespace ShineGuacamole.DataAccess.SqlServer
         }
 
         /// <summary>
-        /// Converts Connection to ConnectionInfo.
+        /// Converts Connection to RemoteConnectionInfo.
         /// </summary>
         /// <param name="connection">The connection object.</param>
         /// <returns></returns>
-        private static ConnectionInfo ToConnectionInfo(Connection connection)
+        private static RemoteConnectionInfo ToConnectionInfo(Connection connection)
         {
-            return new ConnectionInfo
+            return new RemoteConnectionInfo
             {
                 Id = connection.ConnectionId.ToString(),
                 Image = connection.Image,
                 Name = connection.Name,
-                Type = Enum.Parse<ConnectionType>(connection.Type)
+                Type = Enum.Parse<ConnectionType>(connection.Type),
+                FavPosition = connection.FavPosition
             };
         }
 

@@ -19,9 +19,9 @@
 namespace ShineGuacamole.Shared.Models
 {
     /// <summary>
-    /// The Connection Info.
+    /// The Remote Connection Info.
     /// </summary>
-    public class ConnectionInfo
+    public class RemoteConnectionInfo
     {
         /// <summary>
         /// The connection Identifier.
@@ -37,6 +37,11 @@ namespace ShineGuacamole.Shared.Models
         /// The connection type.
         /// </summary>
         public ConnectionType Type { get; set; }
+
+        /// <summary>
+        /// The favorite position.
+        /// </summary>
+        public int? FavPosition { get; set; }
 
         /// <summary>
         /// The image.

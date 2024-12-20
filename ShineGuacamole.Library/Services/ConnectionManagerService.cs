@@ -91,7 +91,7 @@ namespace ShineGuacamole.Services
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<ConnectionInfo>> GetConnections(string userId)
+        public async Task<IEnumerable<RemoteConnectionInfo>> GetConnections(string userId)
         {
             _logger.LogInformation(nameof(GetConnectionConfiguration) + $" - Called.");
 
@@ -101,13 +101,13 @@ namespace ShineGuacamole.Services
         }
 
         /// <inheritdoc/>
-        public async Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties properties)
+        public async Task SaveConnection(string userId, RemoteConnectionInfo connection, IConnectionProperties properties)
         {
             _logger.LogInformation(nameof(SaveConnection) + $" - Called.");
 
             await _connectionsDataAccess.SaveConnection(userId, connection, properties);
 
-            _notificationService.SendNotification(new EntityUpdate<ConnectionInfo> 
+            _notificationService.SendNotification(new EntityUpdate<RemoteConnectionInfo> 
             { 
                 Entity = connection, 
                 Type = NotificationType.ConnectionUpdate,
@@ -124,7 +124,7 @@ namespace ShineGuacamole.Services
         }
         
         /// <inheritdoc/>
-        public async Task<(ConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId)
+        public async Task<(RemoteConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId)
         {
             _logger.LogInformation(nameof(GetConnection) + $" - Called. Id: {connectionId}");
 
@@ -141,6 +141,27 @@ namespace ShineGuacamole.Services
             }
 
             return (result.Info, properties);
+        }
+
+        /// <inheritdoc/>
+        public async Task<IEnumerable<RemoteConnectionInfo>> GetFavorites(string userId)
+        {
+            _logger.LogInformation(nameof(GetFavorites) + $" - Called. User Id: {userId}");
+
+            var connections = await _connectionsDataAccess.GetFavorites(userId);
+
+            return connections?.OrderBy(c => c.FavPosition);
+        }
+
+        /// <inheritdoc/>
+        public async Task SaveFavorites(string userId, List<RemoteConnectionInfo> connections)
+        {
+            _logger.LogInformation(nameof(SaveFavorites) + $" - Called. User Id: {userId}, Count: {connections?.Count ?? 0}");
+
+            // update the positions
+            connections.ForEach(c => c.FavPosition = connections.IndexOf(c));
+
+            await _connectionsDataAccess.SaveFavorites(userId, connections);
         }
 
         #endregion

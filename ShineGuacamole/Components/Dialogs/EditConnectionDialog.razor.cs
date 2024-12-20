@@ -22,7 +22,6 @@ using MudBlazor;
 using ShineGuacamole.Services.Interfaces;
 using ShineGuacamole.Shared.Enums;
 using ShineGuacamole.Shared.Models;
-using ConnectionInfo = ShineGuacamole.Shared.Models.ConnectionInfo;
 
 namespace ShineGuacamole.Components.Dialogs
 {
@@ -32,7 +31,7 @@ namespace ShineGuacamole.Components.Dialogs
     public partial class EditConnectionDialog
     {
         private MudForm _form;
-        private ConnectionInfo _connection;
+        private RemoteConnectionInfo _connection;
         private ConnectionProperties _properties;
         private bool _isLoading = true;
         private bool _isValid;
@@ -70,7 +69,7 @@ namespace ShineGuacamole.Components.Dialogs
 
                 if (string.IsNullOrEmpty(ConnectionId))
                 {
-                    _connection = new ConnectionInfo();
+                    _connection = new RemoteConnectionInfo();
                     _properties = new ConnectionProperties();
                 }
                 else

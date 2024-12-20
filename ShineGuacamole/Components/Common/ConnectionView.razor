@@ -1,0 +1,151 @@
+﻿<!--
+//
+// Copyright 2024 Gurpreet Raju
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+-->
+
+@using Microsoft.AspNetCore.WebUtilities
+@using ShineGuacamole.Components.Dialogs
+@using ShineGuacamole.Shared.Enums
+
+@inherits ShineComponentBase<ConnectionView>
+
+@inject IDialogService DialogService
+@inject NavigationManager Navigation
+
+<div class="connection">
+    <MudPaper Class="connection-tile">
+        @if (Edit)
+        {
+            <MudIconButton Variant="Variant.Text" Class="conn-options-button align-self-end"
+                           Icon="@Icons.Material.Filled.Edit"
+                           OnClick="@(() => EditConnection(Shared.Enums.ViewMode.Edit))"
+                           Size="Size.Small">
+            </MudIconButton>
+        }
+        <MudStack Class="py-3" AlignItems="AlignItems.Center">
+            <MudAvatar Variant="Variant.Filled" Size="Size.Large">
+                @if (Connection.Image == null)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Computer"></MudIcon>
+                }
+                else
+                {
+                    <MudImage Src="@GetImageSrc()" Alt="@Connection.Type.ToString()" />
+                }
+            </MudAvatar>
+            <MudText Align="Align.Center">@Connection.Name</MudText>
+        </MudStack>
+        <MudButtonGroup Color="Color.Primary" Variant="Variant.Filled" DropShadow="false" OverrideStyles="false">
+            <MudButton OnClick="@Details"
+            Variant="Variant.Filled" Size="Size.Small"
+            Color="Color.Secondary">
+                Details
+            </MudButton>
+            <MudButton OnClick="@Connect"
+            Variant="Variant.Filled" Size="Size.Small"
+            Color="Color.Primary">
+                Connect
+            </MudButton>
+        </MudButtonGroup>
+    </MudPaper>
+</div>
+
+@code {
+    /// <summary>
+    /// The connection info.
+    /// </summary>
+    [Parameter]
+    public ShineGuacamole.Shared.Models.RemoteConnectionInfo Connection { get; set; }
+
+    /// <summary>
+    /// Can edit. Default: true.
+    /// </summary>
+    [Parameter]
+    public bool Edit { get; set; } = true;
+
+    /// <summary>
+    /// Connect.
+    /// </summary>
+    private void Connect()
+    {
+        try
+        {
+            if (Connection == null) return;
+
+            var parameters = new Dictionary<string, string> { { CommonStrings.ConnectionIdParameter, Connection.Id } };
+            var url = QueryHelpers.AddQueryString(AppRoutes.RemoteConnection, parameters);
+            Navigation.NavigateTo(url);
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError($"Failed to connect to Connection {Connection.Id}.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Show details.
+    /// </summary>
+    private async Task Details()
+    {
+        if (Connection == null) return;
+
+        await EditConnection(ViewMode.ReadOnly);
+    }
+
+    /// <summary>
+    /// Opens the edit connection dialog.
+    /// </summary>
+    /// <returns></returns>
+    private async Task EditConnection(ViewMode mode)
+    {
+        try
+        {
+            if (Connection == null) throw new ArgumentNullException(nameof(Connection));
+
+            var instance = await DialogService.ShowAsync<EditConnectionDialog>(null,
+                new DialogParameters<EditConnectionDialog>
+                    {
+                        { x => x.ConnectionId, Connection.Id },
+                        { x => x.Mode, mode },
+                    },
+                Extensions.DialogOptions);
+
+            await instance.Result;
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError($"Failed to {(mode == ViewMode.ReadOnly ? "view" : "edit")} connection", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the image source from bytes data.
+    /// </summary>
+    /// <returns></returns>
+    private string GetImageSrc()
+    {
+        try
+        {
+            var img = Connection.Image.ToBase64Image();
+            if (img != null) return img;
+        }
+        catch (Exception ex)
+        {
+            NotifyAndLogError("Failed to parse image data.", ex);
+        }
+        return "images/rdp-image.png";
+    }
+}

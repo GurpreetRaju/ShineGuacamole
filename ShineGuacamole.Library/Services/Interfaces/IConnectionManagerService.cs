@@ -43,8 +43,8 @@ namespace ShineGuacamole.Services.Interfaces
         /// Gets the connections.
         /// </summary>
         /// <param name="userId">The user identifier.</param>
-        /// <returns>An awaitable task that returns collection of <seealso cref="ConnectionInfo"/>.</returns>
-        Task<IEnumerable<ConnectionInfo>> GetConnections(string userId);
+        /// <returns>An awaitable task that returns collection of <seealso cref="RemoteConnectionInfo"/>.</returns>
+        Task<IEnumerable<RemoteConnectionInfo>> GetConnections(string userId);
 
         /// <summary>
         /// Save a connection.
@@ -53,7 +53,7 @@ namespace ShineGuacamole.Services.Interfaces
         /// <param name="connection">The connection info.</param>
         /// <param name="connectionProperties">The connection properties.</param>
         /// <returns></returns>
-        Task SaveConnection(string userId, ConnectionInfo connection, IConnectionProperties connectionProperties);
+        Task SaveConnection(string userId, RemoteConnectionInfo connection, IConnectionProperties connectionProperties);
 
         /// <summary>
         /// Remove a connection.
@@ -68,6 +68,21 @@ namespace ShineGuacamole.Services.Interfaces
         /// </summary>
         /// <param name="connectionId">The connection identifier.</param>
         /// <returns></returns>
-        Task<(ConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId);
+        Task<(RemoteConnectionInfo Connection, IConnectionProperties Properties)> GetConnection(string connectionId);
+
+        /// <summary>
+        /// Gets the favorite connections.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<RemoteConnectionInfo>> GetFavorites(string userId);
+
+        /// <summary>
+        /// Save the favorite connections.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="connections">The list of favorite connections.</param>
+        /// <returns></returns>
+        Task SaveFavorites(string userId, List<RemoteConnectionInfo> connections);
     }
 }

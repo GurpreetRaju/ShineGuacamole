@@ -19,6 +19,27 @@
 @page "/"
 @using ShineGuacamole.Components.Pages
 
+@inherits ShineComponentBase<Home>
+
 <PageView PageTitle="Home">
-    <h1>Welcome!</h1>
+    <MudText Typo="Typo.h4" Class="pb-1 mb-3 border-b mud-border-lines-default">@($"Welcome {CurrentUser?.GetUserName()}!")</MudText>
+    <MudStack Row="true" Class="mb-1">
+        <MudText Typo="Typo.h5">Favorites</MudText>
+        <MudIconButton Size="Size.Small" Icon="@MaterialDesignIcons.Normal.PlaylistEdit" OnClick="EditFavorite" />
+    </MudStack>
+    @if (_favoriteConnections.Any())
+    {
+        <MudGrid>
+            @foreach (var connection in _favoriteConnections)
+            {
+                <MudItem xs="3">
+                    <ConnectionView Connection="connection" Edit="false" />
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <NoItemsView />
+    }
 </PageView>
