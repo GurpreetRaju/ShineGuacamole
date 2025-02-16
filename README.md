@@ -1,3 +1,7 @@
 # ShineGuacamole
 
-Shine Guacamole is RDP client based on the Apache Guacamole and Guacamole Sharp (https://github.com/m-expunged/guacamole-sharp). 
+Shine Guacamole is RDP client based on the Apache Guacamole and Guacamole Sharp (https://github.com/m-expunged/guacamole-sharp).
+Stack:
+* Blazor, HTML, CSS
+* ASP.Net Core
+* SQL Serverfor DB
